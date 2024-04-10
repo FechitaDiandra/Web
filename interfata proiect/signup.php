@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<?php
+  session_start();
+  if ($_SESSION['isLogged']) {
+    include 'header2.html'; // Includeți antetul pentru utilizatorii autentificați
+  } else {
+      include 'header1.html'; // Includeți antetul pentru utilizatorii neautentificați
+  }
+  ?>
+
 <html>
 <head>
   <title>FeedBack On Everything</title>
@@ -6,10 +15,6 @@
 </head>
 <body>
 
-  <div id="header-container">
-    <script src="header.js"></script>
-    <link rel="import" href="header.html">
-  </div>
   <div class="container">
     <h1>Sign Up</h1>
     <p>Please fill in this form to create an account.</p>

@@ -1,9 +1,9 @@
 .header {
     background-color: #000;
     color: #ac9fbb;
-    padding: 10px 10px;
     display: flex;
     justify-content: space-between;
+    padding-right: 30px;
 }
 
 #logo {
@@ -44,35 +44,12 @@
     border-radius: 5px;
 }
 
-.log {
-    display: flex;
-}
-
-.button {
-    background-color: #ac9fbb;
-    border: none;
-    color: #59656f;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    padding: 10px 20px;
-}
-
-.signup {
-    background-color: #edd6f0;
-}
-
-.login {
-    background-color: #ac9fbb;
-}
 
 .dropdown {
     position: relative;
     display: inline-block;
-    margin-left: 20px;
 }
+
 
 .dropdown-content {
     display: none;

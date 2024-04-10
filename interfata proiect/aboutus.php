@@ -1,3 +1,12 @@
+<?php
+  session_start();
+  if ($_SESSION['isLogged']) {
+    include 'header2.html'; // Includeți antetul pentru utilizatorii autentificați
+  } else {
+      include 'header1.html'; // Includeți antetul pentru utilizatorii neautentificați
+  }
+  ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,10 +15,6 @@
   <link rel="stylesheet" type="text/css" href="aboutus.css">
 </head>
 <body>
-    <div id="header-container">
-        <script src="header.js"></script>
-        <link rel="import" href="header.html">
-      </div>
 
   <div class="container about-us">
     <h1>Instrument Web pentru Feedback Anonim</h1>
