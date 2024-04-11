@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0;
+    background-color:#ccc;
+    color: #333; 
+  }
+
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Acesta este un index z mic pentru a plasa videoul în spatele conținutului */
+  }
+  
+  /* Stilurile pentru videoul de fundal */
+  .video-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Stilurile pentru overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; /* Setăm un index z mai mare pentru a plasa overlay-ul peste tot */
+  }
+  
+  .container_video {
+    text-align: center;
+    position: relative;
+    bottom: 100px; 
+  }
+  
+  .container_video p {
+    color: #fff; /* Culorea textului */
+  }
+  
+  .swipe-up-arrow {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    bottom: -50%;
+  }
+  
+  .arrow-btn {
+    transform: translate(-50%, -10px); 
+  }
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease; /* Tranziție de 0.5 secunde cu efect de fading */
+  }
+  
+  /* Media query pentru ecranele mai mici */
+  @media (max-width: 728px) {
+    .video-container {
+      padding-top: auto; /* Ajustați raportul de aspect pentru ecranele mai mici */
+    }
+  }
+  
+  
