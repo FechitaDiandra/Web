@@ -1,50 +1,34 @@
 <?php
 session_start();
 if ($_SESSION['isLogged']) {
-  include 'header2.html'; // Includeți antetul pentru utilizatorii autentificați
+  include 'header2.html'; // Include the header for logged-in users
 } else {
-    include 'header1.html'; // Includeți antetul pentru utilizatorii neautentificați
+    include 'header1.html'; // Include the header for non-logged-in users
 }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FeedBack On Everything</title>
+  <title>Feedback On Everything</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="aboutus.css">
 </head>
 <body>
   <div class="container" id ="about-us">
-    <h1>Instrument Web pentru Feedback Anonim</h1>
-    <p>Bine ați venit în instrumentul nostru web pentru feedback anonim! Aici puteți oferi feedback pentru diverse aspecte, cum ar fi evenimente, persoane, locuri geografice, produse, servicii, artefacte artistice și multe altele. Feedback-ul pe care îl oferiți va fi exprimat printr-o gamă de emoții conform modelului Plutchik.</p>
-    <p>Procesul este simplu:</p>
+    <h1>Web Tool for Anonymous Feedback</h1>
+    <p>Welcome to our web tool for anonymous feedback! Here you can provide feedback on various aspects such as events, people, geographical locations, products, services, artistic artifacts, and much more. The feedback you provide will be expressed through a range of emotions according to the Plutchik model.</p>
+    <p>The process is simple:</p>
     <ol>
-        <li><strong>Selectați lucrul de care doriți să oferiți feedback</strong>: Puteți alege din lista noastră variată de lucruri pentru care dorim să primim feedback.</li>
-        <li><strong>Oferiți feedback-ul</strong>: Exprimați-vă emoția față de lucrul respectiv selectând una dintre opțiunile de feedback bazate pe modelul Plutchik.</li>
-        <li><strong>Asigurați-vă că feedback-ul este anonim</strong>: Nu trebuie să vă faceți griji cu privire la dezvăluirea identității dvs. Feedback-ul este complet anonim.</li>
-        <li><strong>Gestionați-vă răspunsurile</strong>: După ce ați oferit feedback, puteți reveni și să-l editați, dacă este necesar. Suntem aici pentru a asigura că exprimați corect ceea ce simțiți.</li>
+        <li><strong>Select the thing you want to give feedback on</strong>: You can choose from our diverse list of things we want feedback on.</li>
+        <li><strong>Provide the feedback</strong>: Express your emotion towards the selected thing by choosing one of the feedback options based on the Plutchik model.</li>
+        <li><strong>Ensure your feedback is anonymous</strong>: You don't need to worry about disclosing your identity. The feedback is completely anonymous.</li>
+        <li><strong>Manage your responses</strong>: After providing feedback, you can come back and edit it if necessary. We're here to ensure you accurately express how you feel.</li>
     </ol>
-    <p>După încheierea perioadei de colectare a feedback-ului pentru un anumit lucru, vom genera rapoarte detaliate pentru a vă oferi o imagine completă a sentimentelor exprimate în legătură cu acel lucru. Aceste rapoarte vor include statistici relevante pentru fiecare categorie de lucruri evaluate conform fiecărei emoții înregistrate. De asemenea, vor fi luate în considerare criterii multiple, cum ar fi grupul de utilizatori, perioada de timp în care s-a realizat evaluarea, subcategoriile de lucruri și caracteristicile considerate pozitive/negative pe baza emoției exprimate.</p>
-    <p>Rapoartele generate vor fi disponibile în formatele HTML, CSV și JSON, pentru a vă oferi flexibilitate în analiză și utilizare.</p>
-    <p>Vă mulțumim că ați ales să utilizați instrumentul nostru web pentru feedback anonim. Ne dorim să vă oferim cea mai bună experiență și să vă asigurăm că vocea dvs. contează!</p>
+    <p>After the feedback collection period for a particular thing ends, we will generate detailed reports to give you a complete picture of the sentiments expressed regarding that thing. These reports will include relevant statistics for each category of things evaluated according to each recorded emotion. We will also consider multiple criteria such as user group, evaluation period, thing subcategories, and positive/negative features based on the expressed emotion.</p>
+    <p>The generated reports will be available in HTML, CSV, and JSON formats to provide you with flexibility in analysis and usage.</p>
+    <p>Thank you for choosing to use our web tool for anonymous feedback. We aim to provide you with the best experience and ensure that your voice matters!</p>
   </div>
-  <script src="script.js"></script>
-  <script>
 
-
-const swipeUpArrow = document.querySelector('.swipe-up-arrow');
-const videoContainer = document.querySelector('.video-container');
-const contentContainer = document.querySelector('.container');
-
-swipeUpArrow.addEventListener('click', function() {
-  videoContainer.classList.add('fade-out');
-  videoContainer.addEventListener('transitionend', function() {
-    videoContainer.style.display = 'none'; 
-    contentContainer.style.display = 'block'; 
-  });
-});
-
-  </script>
 
 </body>
 </html>

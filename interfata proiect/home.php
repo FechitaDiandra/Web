@@ -25,5 +25,22 @@ if ($_SESSION['isLogged']) {
       </div>
     </div>
   </div>
+  <script src="script.js"></script>
+  <script>
+
+
+const swipeUpArrow = document.querySelector('.swipe-up-arrow');
+const videoContainer = document.querySelector('.video-container');
+const contentContainer = document.querySelector('.container');
+
+swipeUpArrow.addEventListener('click', function() {
+  videoContainer.classList.add('fade-out');
+  videoContainer.addEventListener('transitionend', function() {
+    videoContainer.style.display = 'none'; 
+    contentContainer.style.display = 'block'; 
+  });
+});
+
+  </script>
 </body>
 </html>

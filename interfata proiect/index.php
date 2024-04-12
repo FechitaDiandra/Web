@@ -1,71 +1,69 @@
 <?php
-session_start(); //sesiunea se creeaza automat cand se acceseaza pagina principala index.html
-
+session_start(); 
 $_SESSION['isLogged'] = true;
 if ($_SESSION['isLogged']) {
-    include 'header2.html'; // Includeți antetul pentru utilizatorii autentificați
+    include 'header2.html'; 
 } else {
-    include 'header1.html'; // Includeți antetul pentru utilizatorii neautentificați
+    include 'header1.html'; 
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FeedBack On Everything</title>
+  <title>Feedback On Everything</title>
   <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
 
     <div class="form-fields">
-      <!-- Aici vor fi câmpurile pentru descriere și formular -->
-      <input type="text" placeholder="Descriere" class="description-input">
-      <textarea placeholder="Introdu formularul aici" class="form-textarea"></textarea>
-      <button class="publica-button">Publică</button>
+      <input type="text" placeholder="Description" class="description-input">
+      <textarea placeholder="Enter your form here" class="form-textarea"></textarea>
+      <button class="publish-button">Publish</button>
     </div>
 
   
   <div class="container">
     <div class="feedback-form">
-      <img src="profile.jpg" alt="Iconiță utilizator"> Utilizator anonim
-      <h2>Titlu formular</h2>
-      <p>Descriere formular</p>
-      <a href="#">Accesează formularul</a>
+      <img src="profile.jpg" alt="User Icon"> Anonymous User
+      <h2>Form Title</h2>
+      <p>Form Description</p>
+      <a href="#">Access the form</a>
   </div>
   <div class="container">
     <div class="feedback-form">
-      <img src="profile.jpg" alt="Iconiță utilizator"> Utilizator anonim
-      <h2>Titlu formular</h2>
-      <p>Descriere formular</p>
-      <a href="#">Accesează formularul</a>
+      <img src="profile.jpg" alt="User Icon"> Anonymous User
+      <h2>Form Title</h2>
+      <p>Form Description</p>
+      <a href="#">Access the form</a>
   </div>
   <div class="container">
     <div class="feedback-form">
-      <img src="profile.jpg" alt="Iconiță utilizator"> Utilizator anonim
-      <h2>Titlu formular</h2>
-      <p>Descriere formular</p>
-      <a href="#">Accesează formularul</a>
+      <img src="profile.jpg" alt="User Icon"> Anonymous User
+      <h2>Form Title</h2>
+      <p>Form Description</p>
+      <a href="#">Access the form</a>
   </div>
   <div class="container">
     <div class="feedback-form">
-      <img src="profile.jpg" alt="Iconiță utilizator"> Utilizator anonim
-      <h2>Titlu formular</h2>
-      <p>Descriere formular</p>
-      <a href="#">Accesează formularul</a>
+      <img src="profile.jpg" alt="User Icon"> Anonymous User
+      <h2>Form Title</h2>
+      <p>Form Description</p>
+      <a href="#">Access the form</a>
   </div>
   <div class="container">
     <div class="feedback-form">
-      <img src="profile.jpg" alt="Iconiță utilizator"> Utilizator anonim
-      <h2>Titlu formular</h2>
-      <p>Descriere formular</p>
-      <a href="#">Accesează formularul</a>
+      <img src="profile.jpg" alt="User Icon"> Anonymous User
+      <h2>Form Title</h2>
+      <p>Form Description</p>
+      <a href="#">Access the form</a>
   </div>
   <div class="container">
     <div class="feedback-form">
-      <img src="profile.jpg" alt="Iconiță utilizator"> Utilizator anonim
-      <h2>Titlu formular</h2>
-      <p>Descriere formular</p>
-      <a href="#">Accesează formularul</a>
+      <img src="profile.jpg" alt="User Icon"> Anonymous User
+      <h2>Form Title</h2>
+      <p>Form Description</p>
+      <a href="#">Access the form</a>
   </div>
 </div>  
 

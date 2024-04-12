@@ -1,25 +1,25 @@
 <?php
   session_start();
   if ($_SESSION['isLogged']) {
-    include 'header2.html'; // Includeți antetul pentru utilizatorii autentificați
+    include 'header2.html'; // Include the header for logged-in users
   } else {
-      include 'header1.html'; // Includeți antetul pentru utilizatorii neautentificați
+      include 'header1.html'; // Include the header for non-logged-in users
   }
-  ?>
+?>
 
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FeedBack On Everything</title>
+  <title>Feedback On Everything</title>
   <link rel="stylesheet" type="text/css" href="login.css">
-  </head>
-  <body>
+</head>
+<body>
 
   <div class="container">
     <h1>Log In</h1>
     <hr>
-    <form class="signup-form" action="/action_page.php">
+    <form class="signup-form">
       <label for="email"><b>Email</b></label>
       <input type="text" placeholder="Enter Email" name="email" required>
 
