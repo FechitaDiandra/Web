@@ -19,6 +19,6 @@ if ($_SESSION['isLogged']) {
         <p>Your form has been submitted successfully.</p>
         <p>Redirecting to the home page...</p>
     </div>
-    <?php header("refresh:3;url=index.php");?>
+    <?php header("refresh:3;url=home.php");?>
 </body>
 </html>

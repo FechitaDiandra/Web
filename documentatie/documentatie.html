@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    img {
+      max-width: 80%;
+      height: auto;
+    }
+  </style>
+  <title>Project Specification</title>
+</head>
+<body>
+  <h1>1. Introduction</h1>
+  <h2>Product Scope</h2>
+  <p>The project aims to develop a web application that allows users to create custom forms for statistics and analysis. These forms can be tailored to specific entities or categories, enabling users to gather feedback and generate insights for their own purposes. The forms will capture feedback responses using the Plutchik emotion model.</p>
+  <p>In addition to creating forms, the web application will provide users with the ability to provide anonymous feedback for different entities (events, people, locations, products, services, etc.) using the Plutchik emotion model. Users will utilize intuitive forms to submit their emotional responses, which will be recorded and stored using a REST/GraphQL API.</p>
+
+  <h2>References</h2>
+  <ul>
+    <li><a href="https://www.6seconds.org/2022/03/13/plutchik-wheel-emotions/">Plutchik Model</a></li>
+  </ul>
+
+  <h1>2. Overall Description</h1>
+  <h2>Product Functions</h2>
+  <ul>
+    <li>Allow all users/page visitators to provide anonymous feedback for various entities.</li>
+    <li>Allow only logged users to create a form: the user can then publish it on the HomePage to get answers from other webpage users/visitators, or/and share it with the people they think would be the best fit to complete the form. </li>
+    <li>Generate statistics on evaluated entities based on recorded emotions after the collection period ends.</li>
+    <li>Users will be able to see their form history and access the statistics of any form anytime.</li>
+    <li>On the HomePage can be found the most recent forms published by users and it is actualized live.</li>
+  </ul>
+
+  <h2>User Classes and Characteristics</h2>
+  <ul>
+    <li>General users: These are individuals who provide anonymous feedback. They do not need to create an account or log in to the system. Their primary interaction with the system is through the feedback form.</li>
+    <li>Logged users: These are users who have registered and logged into the system. In addition to providing feedback, they can also create and manage their own feedback forms.</li>
+    <li>Administrators: They can manage all entities, users, forms and feedback in the system.</li>
+  </ul>
+
+  <h2>Operating Environment</h2>
+  <ul>
+    <li>Compatible with modern web browsers.</li>
+    <li>Supports various operating systems (Windows, macOS, Linux, etc.).</li>
+  </ul>
+
+  <h2>Design and Implementation Constraints</h2>
+  <ul>
+    <li>Utilizes REST/GraphQL API for backend.</li>
+    <li>Requires UTF-8 encoding for data transmission.</li>
+  </ul>
+
+  <h2>Assumptions and Dependencies</h2>
+  <ul>
+    <li>Users have access to a stable internet connection.</li>
+    <li>Users understand the Plutchik emotion model for providing feedback.</li>
+  </ul>
+
+  <h1>3. External Interface Requirements</h1>
+  <h2>User Interfaces</h2>
+  
+  <p>1. Header: the website has different headers depending of the user(logged in / not logged in). For now, we can change the logged in variable using PHP in the index.php file for testing.</p>
+  <img src="loggedin_header.png" alt="Header for logged users">
+  <img src="not_loggedin_header.png" alt="Header for non logged users">
+
+  <br><br>
+  <p>2. HomePage: displays the functionality of our website and the latest forms published</p>
+  <img src="homepage.png" alt="Create form page">
+
+  <br><br>
+  <p>3. Create Form page: if the user is not logged in, the page it's inaccessible and it will redirect the user to the Login page. If the user is logged in, this is what the page will look like:</p>
+  <img src="create_form.png" alt="Create form page">
+
+  <p>The "Create form" button will send the user to a "Form created successfuly" page that will show a confirmation and the link to the answer form page.</p>
+  <img src="successfuly_created.png" alt= "Form created successfuly page">
+
+  <br><br>
+  <p>4. The "See how it looks" button and also the link of the form will send the user to the Answer Form page which will look like this: </p>
+  <img src="answer_form.png" alt="Answer form page">
+
+  <br><br>
+  <p>5. The "Submit Feedback" button will send the user to a "Feedback submitted" page that will show a confirmation and will redirect the user to the HomePage.</p>
+  <img src="submitted_feedback.png" alt="Feedback submitted page">
+
+  <br><br>
+  <p>6. My Account page: </p>
+  <img src="my_account.png" alt="My Account page">
+
+  <br><br>
+  <p>7. Forms History page: By clicking on the form title it will open the answer-form page for that form, where the user can copy the link from and use it. </p>
+  <p>By clicking on "view statistics", it will open the statistics page where the statistics of the answers will pe visually displayed. The user will also have the options to download the statistics in CSV, HTML and JSON format. </p>
+  <img src="forms_history.png" alt="Forms history page">
+
+  <br><br>
+  <p>8. View Statistics page: For now, the visual representation is implemented using JavaScript.</p>
+  <img src="view_statistics.png" alt="View statistics page">
+
+  <br><br>
+  <p>9. Administrators page: </p>
+  <p>The Administrator can Add, Edit, and Delete all users, including other Administrators.</p>
+  <img src="admin_users.png" alt="Administrators page"><br><br><br>
+  <p>The users can report a form. The administrator then checks the form and can delete it if it doesn't respect the guidelines.</p>
+  <img src="admin_reports.png" alt="Administrators page">
+
+  <br><br>
+  <p>10. Login and Sign Up pages: </p>
+  <img src="login.png" alt="Login page"><br>
+  <img src="signup.png" alt="SignUp page">
+
+
+  <h1>4. System Features</h1>
+  <h2>User Authentication and Authorization:</h2> 
+  <p>Implementing a secure login system that includes password encryption and session management. This could also include features like password recovery, email verification, and two-factor authentication.</p>
+
+  <h2>Data Export</h2>
+  <p>Users can export the data from their feedback forms in various formats (CSV, Excel, etc.) for further analysis.</p>
+
+  <h2>Anonymous Feedback Submission</h2>
+  <p>Users can provide feedback anonymously without requiring them to create an account or provide personal information. This can encourage more honest and unbiased feedback.</p>
+
+  <h2>Emotion Selection</h2>
+  <p>User-friendly interface for selecting emotions based on the Plutchik model. </p>
+
+  <h2>Data Visualization</h2>
+  <p>Implementing visually appealing data visualizations to represent feedback data, such as bar charts, pie charts, or line graphs. This can help users understand the data more intuitively and identify patterns or trends.</p>
+
+  <h2>Social Sharing</h2>
+  <p>Implementing social media sharing functionality to allow users to share feedback forms or specific responses on platforms like Facebook, Instagram, LinkedIn.</p>
+
+  <h2>DataBases</h2>
+  <p>The database will contain tables for forms, responses, and users. Each table will have a unique randomly generated ID for each record.</p>
+    <ul>
+      <li>Forms Table: This will store the forms created by users. Each form will have its structure saved as JSON. The structure will include the form questions, response options, and any other relevant details.</li>
+      <li>Responses Table: This will store the responses received for each form. The responses will also be stored as JSON. Each response will be associated with the corresponding form through the forms ID.</li>
+      <li>Account Table: This will store user information. Each user will have a unique randomly generated ID when they create an account.</li>
+    </ul>
+  <p>The database will allow for the creation, reading, updating, and deletion (CRUD) of records in these tables. It will also allow for complex queries to generate statistics based on the collected responses.</p>
+  <img src="databases_web.png" alt="DataBases Schema">
+  <h1>5. Other Nonfunctional Requirements</h1>
+  <h2>Safety Requirements</h2>
+  <ul>
+    <li>User anonymity must be maintained.</li>
+    <li>Data encryption for user privacy.</li>
+  </ul>
+
+  <h2>Security Requirements</h2>
+  <ul>
+    <li>Secure user authentication and authorization.</li>
+  </ul>
+
+</body>
+</html>

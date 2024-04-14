@@ -56,9 +56,9 @@
       </div>
 
       <div class="button-container">
-  <input type="submit" value="See how it looks">
-  <button  id="new" onclick="window.open('createdformcheck.php', '_blank')">Get your link</button>
-</div>
+        <input type="submit" value="See how it looks">
+        <button  id="new" onclick="window.open('created-form-confirmation.php', '_blank')">Create Form</button>
+     </div>
     </form>
   </div>
 </body>

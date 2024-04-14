@@ -17,16 +17,16 @@
 <div class="container">
         <h1>New Users</h1>
         <form id="addUserForm">
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username"><br>
-            <label for="role">Role:</label><br>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+            <label for="role">Role:</label>
             <select id="role" name="role">
                 <option value="user">User</option>
                 <option value="admin">Administrator</option>
-                <!-- Add more roles here if needed -->
-            </select><br>
+            </select>
             <input type="submit" value="Add User">
         </form>
+        <br><br>
 
         <table id="usersTable">
             <tr>
@@ -68,7 +68,6 @@ var users = [
     {username: "User2", role: "User"},
     {username: "User3", role: "User"},
     {username: "User4", role: "Administrator"},
-    // add more users here
 ];
 
 var table = document.getElementById("usersTable");
@@ -79,7 +78,7 @@ for (var i = 0; i < users.length; i++) {
     var cell3 = row.insertCell(2);
     cell1.innerHTML = users[i].username;
     cell2.innerHTML = users[i].role;
-    cell3.innerHTML = '<button>Edit</button> <button>Delete</button>'; // Add edit and delete buttons
+    cell3.innerHTML = '<button>Edit</button> <button>Delete</button>';
 }
 </script>
     <script>
@@ -89,11 +88,7 @@ document.getElementById('loadReportsButton').addEventListener('click', function(
         {user: "User2", form: "Form2", report: "Report2"},
         {user: "User3", form: "Form3", report: "Report3"},
         {user: "User4", form: "Form4", report: "Report4"},
-        {user: "User5", form: "Form5", report: "Report5"},
-        {user: "User6", form: "Form6", report: "Report6"},
-        {user: "User7", form: "Form7", report: "Report7"},
-        {user: "User8", form: "Form8", report: "Report8"},
-        // add more reports here
+        {user: "User5", form: "Form5", report: "Report5"}
     ];
 
     var table = document.getElementById("reportsTable");
@@ -114,7 +109,6 @@ var reports = [
     {user: "User2", form: "Form2", report: "Report2"},
     {user: "User3", form: "Form3", report: "Report3"},
     {user: "User4", form: "Form4", report: "Report4"},
-    // add more reports here
 ];
 
 var table = document.getElementById("reportsTable");
@@ -132,7 +126,6 @@ for (var i = 0; i < reports.length; i++) {
 var notifications = [
     "User1 received a feedback response.",
     "User2 received a feedback response.",
-    // add more notifications here
 ];
 
 var notificationsDiv = document.getElementById("notifications");
