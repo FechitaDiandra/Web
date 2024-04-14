@@ -55,7 +55,10 @@
         <label><input type="radio" name="relation" value="no" required>No</label>
       </div>
 
-      <input type="submit" value="Create Form">
+      <div class="button-container">
+  <input type="submit" value="See how it looks">
+  <button  id="new" onclick="window.open('createdformcheck.php', '_blank')">Get your link</button>
+</div>
     </form>
   </div>
 </body>

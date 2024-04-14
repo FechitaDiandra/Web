@@ -10,7 +10,7 @@ if ($_SESSION['isLogged']) {
 <html> 
     <head> 
         <title>Feedback On Everything</title> 
-        <link rel="stylesheet" type="text/css" href="form.css"> 
+        <link rel="stylesheet" type="text/css" href="myaccount.css"> 
     </head> 
     <body> 
         <div class="form-container"> 

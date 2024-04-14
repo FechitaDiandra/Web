@@ -16,44 +16,13 @@ if ($_SESSION['isLogged']) {
 </head>
 <body>
 
-  <!-- video -->
-  <div class="video-container">
-    <video autoplay loop muted class="video-bg">
-      <source src="video.mp4" type="video/mp4">
-    </video>
-    <div class="overlay">
-      <div class="text_on_video">
-        <p style="font-size: 36px; color: white; text-align: center;">FEEDBACK ON EVERYTHING</p>
-        <div class="swipe-up-arrow" id="arrow-btn">↑</div>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-  <script>  
-  const swipeUpArrow = document.querySelector('.swipe-up-arrow');
-  const videoContainer = document.querySelector('.video-container');
-  const contentContainer = document.querySelector('.container');
-
-  swipeUpArrow.addEventListener('click', function() {
-    videoContainer.classList.add('fade-out');
-    videoContainer.addEventListener('transitionend', function() {
-      videoContainer.style.display = 'none'; // Ascunde videoul
-      contentContainer.style.display = 'block'; // Afișează conținutul
-    });
-  });
-
-  </script>
-
-
-  <!-- about us -->
-  
   <div class="aboutus_container" id ="about-us">
     <h1>Web Tool for Anonymous Feedback</h1>
     <p>Welcome to our web tool for anonymous feedback! Here you can provide feedback on various aspects such as events, people, geographical locations, products, services, artistic artifacts, and much more. The feedback you provide will be expressed through a range of emotions according to the Plutchik model.</p>
     <p>The process is simple:</p>
     <ol>
         <li><strong>Select the thing you want to give feedback on</strong>: You can choose from our diverse list of things we want feedback on.</li>
+        <li><strong>Create your own feedback form</strong>: You can make your form, setting the time to be available and then you cand share it with others.</li>
         <li><strong>Provide the feedback</strong>: Express your emotion towards the selected thing by choosing one of the feedback options based on the Plutchik model.</li>
         <li><strong>Ensure your feedback is anonymous</strong>: You don't need to worry about disclosing your identity. The feedback is completely anonymous.</li>
         <li><strong>Manage your responses</strong>: After providing feedback, you can come back and edit it if necessary. We're here to ensure you accurately express how you feel.</li>

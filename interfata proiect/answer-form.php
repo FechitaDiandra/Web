@@ -86,6 +86,7 @@
       <div id="selected-emotion"></div>
 
     <input type="submit" value="Submit Feedback">
+    <button id="report" type="button" onclick="reportForm()">Report Form</button>
     </form>
 
     <script>
@@ -97,7 +98,20 @@
             });
         });
     </script>
+  <script>
+        var emotions = document.querySelectorAll('.emotion');
+        emotions.forEach(function(emotion) {
+            emotion.addEventListener('click', function() {
+            
+            document.getElementById('selected-emotion').innerText = 'The selected emotion is: ' + this.getAttribute('data-emotion');
+            });
+        });
 
+        function reportForm() {
+            // Code to report the form goes here
+            alert('Form has been reported.');
+        }
+    </script>
   </div>
 </body>
 </html>

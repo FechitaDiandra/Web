@@ -38,15 +38,6 @@
     
     <h1>User Reports</h1>
     <div class="container">
-        <form id="addUserForm">
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username"><br>
-            <label for="formname">Form Name:</label><br>
-            <input type="text" id="formname" name="formname"><br>
-            <label for="report">Report:</label><br>
-            <textarea id="report" name="report"></textarea><br>
-            <input type="submit" value="Add User">
-        </form>
     <table id="reportsTable">
         <tr>
             <th>User</th>
@@ -150,6 +141,44 @@ for (var i = 0; i < notifications.length; i++) {
     p.innerHTML = notifications[i];
     notificationsDiv.appendChild(p);
 }
+</script>
+<script>
+var users = ["User1", "User2", "User3", "User4", "User5"];
+
+var activities = ["Logged in", "Created an account", "Shared a form", "Complete a form", "Logged out"];
+
+function getRandomIndex(arrayLength) {
+    return Math.floor(Math.random() * arrayLength);
+}
+
+function getRandomTimestamp() {
+    var date = new Date();
+    date.setHours(Math.random() * 24);
+    date.setMinutes(Math.random() * 60);
+    date.setSeconds(Math.random() * 60);
+    return date.toTimeString().split(' ')[0];
+}
+
+function addActivity() {
+
+    var user = users[getRandomIndex(users.length)];
+    var activity = activities[getRandomIndex(activities.length)];
+    var time = getRandomTimestamp();
+
+    var table = document.getElementById("activityLogTable");
+
+    var row = table.insertRow(-1);
+    var timeCell = row.insertCell(0);
+    var userCell = row.insertCell(1);
+    var activityCell = row.insertCell(2);
+
+    timeCell.innerHTML = time;
+    userCell.innerHTML = user;
+    activityCell.innerHTML = activity;
+}
+
+setInterval(addActivity, 20000);//adauga la activity log o informatie noua la fiecare 20 sec
+
 </script>
 </body>
 </html>
