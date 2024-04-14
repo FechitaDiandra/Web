@@ -49,8 +49,13 @@
         <small>You can put a photo here to match your feedback.</small><br>
      </div>
 
-      <input type="submit" value="Create Form">
+      <div class="input-box">
+        <label for="publish-form">Do you want this form to be published on our website?<br></label>
+        <label><input type="radio" name="relation" value="yes" required>Yes</label> <br>
+        <label><input type="radio" name="relation" value="no" required>No</label>
+      </div>
 
+      <input type="submit" value="Create Form">
     </form>
   </div>
 </body>

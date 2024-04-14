@@ -63,7 +63,7 @@
 
       <div class="input-box">
         <h2>Are you related to this field?</h2>
-        <label><input type="radio" name="relation" value="yes" required>Yes</label>
+        <label><input type="radio" name="relation" value="yes" required>Yes</label> <br>
         <label><input type="radio" name="relation" value="no" required>No</label>
       </div>
 
