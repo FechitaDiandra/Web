@@ -1,9 +1,9 @@
 <?php
 session_start();
 if ($_SESSION['isLogged']) {
-  include 'header2.html'; // Include the header for logged-in users
+  include 'header2.html';
 } else {
-    include 'header1.html'; // Include the header for non-logged-in users
+    include 'header1.html';
 }
 ?>
 <!DOCTYPE html>
