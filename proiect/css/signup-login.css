@@ -1,0 +1,82 @@
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+align-items:center;
+height: 110vh;
+background-color: #a8a6a6;
+color: #333; 
+margin:0;
+}
+
+.container {
+max-width: 600px;
+margin: 0 auto;
+padding: 20px;
+}
+
+.container p {
+text-align: center;
+}
+
+.container p a {
+color: rgb(70, 17, 17);
+}
+
+.small-text {
+font-size: 12px;
+}
+
+h1,p {
+text-align: center;
+}
+
+hr {
+border: none;
+border-top: 1px solid #ddd;
+margin-bottom: 20px;
+}
+
+form {
+background-color:#ccc;
+padding: 20px;
+border-radius: 5px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+display: block;
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+width: 100%;
+max-width: 100%;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 16px; 
+}
+
+input[type="checkbox"] {
+margin-right: 5px;
+margin-bottom:15px
+}
+
+.submitbutton {
+background-color: #ac9fbb;
+color: white;
+border: none;
+padding: 15px 30px;
+cursor: pointer;
+border-radius: 5px;
+display: block;
+margin: 20px auto 0;
+font-size: 18px;
+}
+
+.submitbutton:hover {
+background-color: #59656f;
+}
