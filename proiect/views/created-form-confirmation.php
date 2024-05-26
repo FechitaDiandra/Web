@@ -1,5 +1,5 @@
 <?php 
-require_once '../header.php';
+require_once 'header.php';
 if ($_SESSION['isLogged'] == false) {
     header("Location: ../login.php");
     exit;
@@ -13,7 +13,7 @@ $formUrl = "http://" . $_SERVER['HTTP_HOST'] . "/Web/proiect/answer-form.php?id=
 <html>
 <head>
     <title>Confirmation</title>
-    <link rel="stylesheet" type="text/css" href="../css/created-form-confirmation.css">
+    <link rel="stylesheet" type="text/css" href="css/created-form-confirmation.css">
 </head>
 <body>
     <div class="form-container">

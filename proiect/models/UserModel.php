@@ -1,6 +1,12 @@
 <?php
 
 class UserModel {
+    public function __construct() {
+        $this->mysql = new mysqli('localhost', 'root', '', 'foe_app');
+        if (mysqli_connect_errno()) {
+            die('Conexiunea a eșuat: ' . mysqli_connect_error());
+        }
+    } 
 
 function create_user($username, $email, $password) {
     $mysql = new mysqli('localhost', 'root', '', 'foe_app');
@@ -520,6 +526,26 @@ function generate_token() {
     $token = bin2hex(random_bytes(32));
     return $token;
 }
+public function getUserIdByEmail($email) {
+    $stmt = $this->mysql->prepare("SELECT user_id FROM users WHERE email = ?");
+    if ($stmt === false) {
+        die('Error preparing statement: ' . $this->mysql->error);
+    }
+    $stmt->bind_param("s", $email);
+    if (!$stmt->execute()) {
+        die('A survenit o eroare la obținerea user_id: ' . $stmt->error);
+    }
+    $result = $stmt->get_result();
+    $user_data = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($user_data) {
+        return $user_data['user_id'];
+    } else {
+        return null;
+    }
+}
+
 
 }
 

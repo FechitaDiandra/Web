@@ -5,7 +5,7 @@ class FormModel {
     private $conn;
 
     public function __construct() {
-        $this->conn = new mysqli("localhost", "root", "", "database_name"); // Schimbă "database_name" cu numele bazei tale de date
+        $this->conn = new mysqli("localhost", "root", "", "foe_app");
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
@@ -35,9 +35,9 @@ class FormModel {
 
     // Obținerea unui formular după ID
     public function getFormById($form_id) {
-        $stmt = $this->mysql->prepare("SELECT * FROM forms WHERE form_id = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM forms WHERE form_id = ?");
         if ($stmt === false) {
-            die('Error preparing statement: ' . $this->mysql->error);
+            die('Error preparing statement: ' . $this->conn->error);
         }
         $stmt->bind_param("i", $form_id);
         if (!$stmt->execute()) {
@@ -63,5 +63,32 @@ class FormModel {
         }
     }
 
+    // Obținerea tuturor formularelor după user_id
+    public function getAllFormsByUserId($user_id) {
+        $stmt = $this->conn->prepare("SELECT * FROM forms WHERE user_id = ?");
+        if ($stmt === false) {
+            die('Error preparing statement: ' . $this->conn->error);
+        }
+        $stmt->bind_param("i", $user_id);
+        if (!$stmt->execute()) {
+            die('A survenit o eroare la obținerea formularelor: ' . $stmt->error);
+        }
+        $result = $stmt->get_result();
+        $forms = [];
+        while ($form_data = $result->fetch_assoc()) {
+            $forms[] = new Form(
+                $form_data['form_id'],
+                $form_data['user_id'],
+                $form_data['title'],
+                $form_data['description'],
+                $form_data['is_published'],
+                $form_data['created_at'],
+                $form_data['delete_form_token'],
+                $form_data['delete_form_token_expires']
+            );
+        }
+        $stmt->close();
+        return $forms;
+    }
 }
 ?>
