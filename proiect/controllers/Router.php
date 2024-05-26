@@ -27,6 +27,7 @@ class Router {
             '/change-email.php' => ['ChangeEmailController', 'index'],
             '/delete-account.php' => ['DeleteAccountController', 'index'],
             '/reset-password.php' => ['ResetPasswordController', 'index']
+            // Eliminat: '/delete-form.php' => ['DeleteController', 'delete']
         ];
     }
 
@@ -39,52 +40,33 @@ class Router {
 
     public function route() {
         $requestPath = $_SERVER['REQUEST_URI'];
-        $requestPath = strtolower(strtok($requestPath, '?'));
-        //echo "Request Path: $requestPath<br>";
+        $path = strtolower(strtok($requestPath, '?'));
 
-        $basePath = strtolower(str_replace('/index.php', '', str_replace(' ', '', $_SERVER['SCRIPT_NAME'])));
-        //echo "Base Path: $basePath<br>";
-        
-        // Eliminăm spațiile din calea primită din URL
-        $requestPath = str_replace(' ', '', $requestPath);
-        //echo "Modified Request Path: $requestPath<br>";
+        $basePath = strtolower(str_replace('/index.php', '', $_SERVER['SCRIPT_NAME']));
+        $path = str_replace(' ', '', str_replace($basePath, '', $path));
 
-        $path = str_replace($basePath, '', $requestPath);
-        //echo "Path: $path<br>";
-
-        $controller = null;
-        $method = null;
-        $params = [];
-
-        foreach ($this->routes as $route => $handler) {
-            $pattern = '#^' . preg_replace('#\{[a-zA-Z]+\}#', '([a-zA-Z0-9-]+)', strtolower($route)) . '$#';
-            if (preg_match($pattern, $path, $matches)) {
-                $controller = $handler[0];
-                $method = $handler[1];
-
-                // Eliminăm primul element din $matches, deoarece acesta conține întreaga potrivire a șablonului de rută
-                array_shift($matches);
-                $params = $matches;
-
-                break;
-            }
-        }
-
-        if ($controller && $method) {
-            require_once 'controllers/' . $controller . '.php';
-            if (class_exists($controller)) {
-                $controllerInstance = new $controller();
-                if (method_exists($controllerInstance, $method)) {
-                    call_user_func_array([$controllerInstance, $method], $params);
-                } else {
-                    echo '404 Not Found: Method Not Found';
-                }
-            } else {
-                echo '404 Not Found: Controller Not Found';
-            }
+        if (isset($this->routes[$path])) {
+            $controllerName = $this->routes[$path][0];
+            $methodName = $this->routes[$path][1];
+            $this->loadController($controllerName, $methodName);
         } else {
             http_response_code(404);
             echo '404 Not Found';
         }
     }
+
+    private function loadController($controller, $method) {
+        require_once 'controllers/' . $controller . '.php';
+        if (class_exists($controller)) {
+            $controllerInstance = new $controller();
+            if (method_exists($controllerInstance, $method)) {
+                call_user_func([$controllerInstance, $method]);
+            } else {
+                echo '404 Not Found: Method Not Found';
+            }
+        } else {
+            echo '404 Not Found: Controller Not Found';
+        }
+    }
 }
+?>
