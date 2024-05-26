@@ -1,16 +1,27 @@
-<?php require_once 'header.php'; ?>
 <?php
-if ($_SESSION['isLogged'] == false) {
-    header("Location: login.php");
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Inițiază sesiunea doar dacă nu este deja activă
+}
+require_once 'header.php';
+require_once 'models/FormModel.php';
+
+if (!isset($_SESSION['isLogged']) || $_SESSION['isLogged'] == false) {
+    header("Location: ../login.php");
     exit;
 }
 
-// Simulează obținerea datelor formularului
-$forms = [
-    ['id' => 1, 'title' => 'Formular #1'],
-    ['id' => 2, 'title' => 'Formular #2'],
-    ['id' => 3, 'title' => 'Formular #3']
-];
+if (!isset($_SESSION['user_id'])) {
+    // Dacă `user_id` nu este setat, setează-l manual
+    require_once '../models/UserModel.php';
+    $userModel = new UserModel();
+    $_SESSION['user_id'] = $userModel->getUserIdByEmail($_SESSION['email']);
+    if (!isset($_SESSION['user_id'])) {
+        die("User ID is not set in the session.");
+    }
+}
+
+$formModel = new FormModel();
+$forms = $formModel->getAllFormsByUserId($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -33,16 +44,15 @@ $forms = [
             if (!empty($forms) && is_array($forms)) {
                 foreach ($forms as $form) {
                     echo "<tr>";
-                    echo "<td><a href='answer-form#id{$form['id']}.php'>{$form['title']}</a></td>";
-                    echo "<td><a href='view-statistics.php?id={$form['id']}'>View statistics</a></td>";
+                    echo "<td><a href='answer-form.php?id={$form->getFormId()}'>{$form->getTitle()}</a></td>";
+                    echo "<td><a href='view-statistics.php?id={$form->getFormId()}'>View statistics</a></td>";
                     echo "<td>
-                        <a href='download.csv?id={$form['id']}'>CSV</a> |
-                        <a href='download.html?id={$form['id']}'>HTML</a> |
-                        <a href='download.json?id={$form['id']}'>JSON</a>
+                        <a href='export-feedback.php?form_id={$form->getFormId()}&format=csv'>CSV</a> |
+                        <a href='export-feedback.php?form_id={$form->getFormId()}&format=json'>JSON</a>
                     </td>";
                     echo "<td>
-                        <form method='post' action='../delete-form.php' onsubmit='return confirm(\"Are you sure you want to delete this form?\");'>
-                            <input type='hidden' name='form_id' value='{$form['id']}'>
+                        <form method='post' action='delete-form.php' onsubmit='return confirm(\"Are you sure you want to delete this form?\");'>
+                            <input type='hidden' name='form_id' value='{$form->getFormId()}'>
                             <button type='submit' class='delete-button'>Delete</button>
                         </form>
                     </td>";
@@ -53,6 +63,13 @@ $forms = [
             }
             ?>
         </table>
+        <div class="import-button">
+            <form action="import-feedback.php" method="post" enctype="multipart/form-data">
+                <label for="file-upload">Import CSV/JSON:</label>
+                <input type="file" name="file-upload" id="file-upload" required>
+                <button type="submit" id="import">Import</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
