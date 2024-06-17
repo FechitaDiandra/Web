@@ -80,3 +80,9 @@ button {
 }
 
 
+@media (max-width: 768px) {
+    .container {
+        width: 90%; /* Slightly more padding on smaller screens */
+        padding: 10px;
+    }
+}
