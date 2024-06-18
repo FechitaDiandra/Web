@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="form-container">
-  <form action="answer-form" method="POST"  enctype="multipart/form-data">
+  <form action="create-form" method="POST"  enctype="multipart/form-data">
 
       <h1>Create your own form!</h1>
       <label for="feedback-type">Feedback Type</label><br>
@@ -42,8 +42,8 @@
 
       <div class="input-box">
         <label for="publish-form">Do you want this form to be published on our website?<br></label>
-        <label><input type="radio" name="relation" value="yes" required>Yes</label> <br>
-        <label><input type="radio" name="relation" value="no" required>No</label>
+        <label><input type="radio" name="public" value="yes" required>Yes</label> <br>
+        <label><input type="radio" name="public" value="no" required>No</label>
       </div>
 
       <div class="button-container">
