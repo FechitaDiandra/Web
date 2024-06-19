@@ -1,15 +1,21 @@
 <?php
 require_once 'BaseController.php';
 require_once 'models/UserModel.php';
-
-
+error_reporting(E_ALL); // Setează PHP să raporteze toate tipurile de erori
+ini_set('display_errors', 1); // Afișează erorile pe ecran
+ini_set('log_errors', 1); // Activează logarea erorilor
+ini_set('error_log', __DIR__ . '/../logs/php-error.log'); // Setează fișierul în care să se scrie logurile
+function customLog($message) {
+    $logFile = __DIR__ . '/../custom_log.txt';
+    $currentTime = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$currentTime] $message" . PHP_EOL, FILE_APPEND);
+}
 class UserController extends BaseController {
     private $userModel;
 
     public function __construct() {
         $this->userModel = new UserModel();
     }
-
 
     public function login() {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -39,6 +45,7 @@ class UserController extends BaseController {
         echo ($response);
         exit;
     }
+
 
     public function logout(){
         $_SESSION = array();
@@ -86,7 +93,60 @@ class UserController extends BaseController {
         echo ($response);
         exit;
     }
-
+    
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['isLogged']) && $_SESSION['isLogged'] === true) {
+            $userId = $_SESSION['user_id'];
+            $file_path = '';
+    
+            if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+                $profilePicture = $_FILES['profile_picture'];
+                $uploadDir = __DIR__ . '/../uploads/';
+    
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+    
+                $uploadFile = $uploadDir . basename($profilePicture['name']);
+    
+                if (move_uploaded_file($profilePicture['tmp_name'], $uploadFile)) {
+                    $file_path = '/web/proiect/app/uploads/' . basename($profilePicture['name']);
+                    error_log("File uploaded successfully: " . $file_path);
+                } else {
+                    $_SESSION['message'] = 'Failed to upload profile picture.';
+                    $this->redirect('myaccount');
+                    exit;
+                }
+    
+                // Update the file path in the database
+                $updateData = ['file_path' => $file_path];
+                $response = $this->userModel->updateUserById($userId, $updateData);
+                $responseDecoded = json_decode($response, true);
+    
+                if ($responseDecoded['success']) {
+                    $_SESSION['profile_picture'] = $file_path;
+                    $_SESSION['message'] = 'Profile picture updated successfully.';
+                } else {
+                    $_SESSION['message'] = 'Failed to update profile picture in the database.';
+                }
+            } else {
+                $_SESSION['message'] = 'No file uploaded or upload error.';
+            }
+            $this->redirect('myaccount');
+        } else {
+            $_SESSION['message'] = 'You must be logged in to update your profile picture.';
+            $this->redirect('myaccount');
+        }
+    }
+    
+    
+    private function isValidPassword($password) {
+        // Verificare minim 8 caractere, cel puțin o literă mare, o literă mică, un număr și un caracter special
+        $isValid = preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
+        error_log("Password validation result for '$password': " . ($isValid ? 'valid' : 'invalid'));
+        return $isValid;
+    }
+    
     public function updateUsername() {
         $newUsername = trim($_POST['username']);
         $id = $_SESSION['id'] ?? '';

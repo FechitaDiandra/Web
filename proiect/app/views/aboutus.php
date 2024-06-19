@@ -24,14 +24,6 @@
     <p>Thank you for choosing to use our web tool for anonymous feedback. We aim to provide you with the best experience and ensure that your voice matters!</p>
   </div>
 
-<?php
-  echo '<pre>';
-  print_r($_SESSION);
-  echo '</pre>';
-  echo '<pre>';
-  var_dump($_SESSION);
-  echo '</pre>';
-  echo session_id();
-?>
+
 </body>
 </html>

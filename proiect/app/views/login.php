@@ -8,7 +8,7 @@
   <script>
     function submitLoginForm(event) {
       event.preventDefault();
-     
+
       var formData = {
         email: document.querySelector('input[name="email"]').value,
         password: document.querySelector('input[name="password"]').value,
@@ -41,7 +41,6 @@
       document.querySelector('.login-form').addEventListener('submit', submitLoginForm);
     });
   </script>
-
 </head>
 <body>
 
@@ -56,10 +55,10 @@
     <?php endif; ?>
       <br><br>
       <label for="email"><b>Email</b></label>
-      <input type="email" placeholder="Enter Email" name="email" required value><br><br>
+      <input type="email" placeholder="Enter Email" name="email" required><br><br>
 
       <label for="password"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="password" required value><br><br>
+      <input type="password" placeholder="Enter Password" name="password" required><br><br>
 
       <label>
         <input type="checkbox" name="remember_me">

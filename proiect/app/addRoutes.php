@@ -167,7 +167,7 @@ $router->addRoute('POST', '/^\/confirm-change-email$/', function() {
     (new UserController())->confirmEmailChange();
     exit;
 });
-
+$router->addRoute('POST', '#^/update-profile-picture$#', [new UserController(), 'updateProfilePicture']);
 
 $router->route();
 ?>
