@@ -122,6 +122,7 @@ class UserModel {
         }
     }
     
+    
     public function getUserById($id){
         $sql = "SELECT * FROM users WHERE user_id = ?";
         if ($stmt = $this->db->prepare($sql)) {

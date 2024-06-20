@@ -4,7 +4,7 @@
 <html>
 <head>
   <title>FeedBack On Everything</title>
-  <link rel="stylesheet" type="text/css" href="css/admin.css">
+  <link rel="stylesheet" type="text/css" href="web/proiect/app/css/admin.css">
 </head>
 <body>
 <div class="container">
@@ -19,7 +19,7 @@
             </select>
             <input type="submit" value="Add User">
         </form>
-        <br><br>
+        
 
         <table id="usersTable">
             <tr>
@@ -166,5 +166,158 @@ function addActivity() {
 setInterval(addActivity, 20000);//adauga la activity log o informatie noua la fiecare 20 sec
 
 </script>
+<h1>Import/Export Data</h1>
+    <div>
+      <input type="file" id="file-input" style="display:none;">
+      <button id="import-csv">Import CSV</button>
+      <button id="import-json">Import JSON</button>
+      <button id="export-csv">Export CSV</button>
+      <button id="export-json">Export JSON</button>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      loadTableData();
+
+      const addRowForm = document.getElementById('add-row-form');
+      if (addRowForm) {
+        addRowForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const formData = new FormData(this);
+          fetch('add_row.php', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.message || 'New record created successfully');
+            loadTableData();
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      }
+
+      const importCsvButton = document.getElementById('import-csv');
+      const importJsonButton = document.getElementById('import-json');
+      const fileInput = document.getElementById('file-input');
+      const exportCsvButton = document.getElementById('export-csv');
+      const exportJsonButton = document.getElementById('export-json');
+
+      if (importCsvButton) {
+        importCsvButton.addEventListener('click', function() {
+          fileInput.setAttribute('data-type', 'csv');
+          fileInput.click();
+        });
+      }
+
+      if (importJsonButton) {
+        importJsonButton.addEventListener('click', function() {
+          fileInput.setAttribute('data-type', 'json');
+          fileInput.click();
+        });
+      }
+
+      if (fileInput) {
+        fileInput.addEventListener('change', function(event) {
+          const fileType = this.getAttribute('data-type');
+          const file = this.files[0];
+          if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', fileType);
+
+            fetch('import_data.php', {
+              method: 'POST',
+              body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.message) {
+                alert(data.message);
+              } else if (data.error) {
+                alert(data.error);
+              }
+              loadTableData();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred while importing data.');
+            });
+          }
+        });
+      }
+
+      if (exportCsvButton) {
+        exportCsvButton.addEventListener('click', function() {
+          window.location.href = 'export_data.php?type=csv';
+        });
+      }
+
+      if (exportJsonButton) {
+        exportJsonButton.addEventListener('click', function() {
+          window.location.href = 'export_data.php?type=json';
+        });
+      }
+
+      function loadTableData() {
+        fetch('get_rows.php')
+        .then(response => response.text())
+        .then(data => {
+          document.querySelector('#usersTable tbody').innerHTML = data;
+        })
+        .catch(error => console.error('Error:', error));
+      }
+
+      function saveToDatabase(editableObj, column, id) {
+        const newValue = editableObj.innerText;
+        fetch('save_edit.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            'id': id,
+            'column': column,
+            'editval': newValue
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            console.log('Save successfully');
+          } else if (data.error) {
+            console.error('Error:', data.error);
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+
+      window.deleteRow = function(id) {
+        if (confirm('Are you sure you want to delete this row?')) {
+          fetch('delete_row.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              'id': id
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message) {
+              loadTableData();  // Refresh the rows after deletion
+            } else if (data.error) {
+              console.error('Error:', data.error);
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        }
+      }
+    });
+  </script>
+
 </body>
 </html>

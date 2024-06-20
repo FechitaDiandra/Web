@@ -169,5 +169,16 @@ $router->addRoute('POST', '/^\/confirm-change-email$/', function() {
 });
 $router->addRoute('POST', '#^/update-profile-picture$#', [new UserController(), 'updateProfilePicture']);
 //$router->addRoute('POST', '#^/send-message$#', [new UserController(), 'handleContactFormSubmission']);
+;
+$router->addRoute('GET', '/^\/export_data$/', function() {
+    require_once 'database/export_data.php';
+    exit;
+});
+
+$router->addRoute('POST', '/^\/import_data$/', function() {
+    require_once 'database/import_data.php';
+    exit;
+});
+
 $router->route();
 ?>

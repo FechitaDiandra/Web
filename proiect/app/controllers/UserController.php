@@ -122,23 +122,25 @@ class UserController extends BaseController {
                     $file_path = '/web/proiect/app/uploads/' . basename($profilePicture['name']);
                     error_log("File uploaded successfully: " . $file_path);
     
-                    // Delete the old profile picture if it exists
-                    if (!empty($currentProfilePicture)) {
-                        $oldFile = __DIR__ . '/../' . $currentProfilePicture;
-                        if (file_exists($oldFile)) {
-                            unlink($oldFile);
-                        }
-                    }
-    
                     // Update the user's profile picture in the database
                     $response = $this->userModel->updateProfilePicture($userId, $file_path);
                     $responseDecoded = json_decode($response, true);
     
                     if ($responseDecoded['success']) {
+                        // Only delete the old profile picture if the database update was successful
+                        if (!empty($currentProfilePicture) && $currentProfilePicture != $file_path) {
+                            $oldFile = __DIR__ . '/../' . $currentProfilePicture;
+                            if (file_exists($oldFile)) {
+                                unlink($oldFile);
+                            }
+                        }
+    
                         $_SESSION['profile_picture'] = $file_path;
                         $_SESSION['message'] = 'Profile picture updated successfully.';
                     } else {
                         $_SESSION['message'] = 'Failed to update profile picture in the database.';
+                        // Clean up the newly uploaded file if the database update failed
+                        unlink($uploadFile);
                     }
                 } else {
                     $_SESSION['message'] = 'Failed to upload profile picture.';
