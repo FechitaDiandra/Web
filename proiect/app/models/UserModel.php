@@ -103,14 +103,12 @@ class UserModel {
         return $isValid;
     }
 
-    public function updateProfilePicture($userId, $filePath) {
+    public function updateProfilePicture($userId, $file_path) {
         $sql = "UPDATE users SET file_path = ? WHERE user_id = ?";
-    
         if ($stmt = $this->db->prepare($sql)) {
-            $stmt->bind_param('si', $filePath, $userId);
+            $stmt->bind_param('si', $file_path, $userId);
     
             if ($stmt->execute()) {
-                error_log("Profile picture updated successfully for user ID: $userId");
                 return json_encode(['success' => true]);
             } else {
                 error_log("Database error: " . $stmt->error);
@@ -124,7 +122,25 @@ class UserModel {
         }
     }
     
-
+    public function getUserById($id){
+        $sql = "SELECT * FROM users WHERE user_id = ?";
+        if ($stmt = $this->db->prepare($sql)) {
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
+            $stmt->close();
+    
+            if ($user) {
+                return json_encode(['success' => true, 'message' => $user]);
+            } else {
+                return json_encode(['success' => false, 'message' => 'User not found.']);
+            }
+        } else {
+            return json_encode(['success' => false, 'message' => 'Database error.']);
+        }
+    }
+    
     public function updateUserById($userId, $userData) {
         $setPart = [];
         $params = [];

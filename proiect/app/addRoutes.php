@@ -168,6 +168,6 @@ $router->addRoute('POST', '/^\/confirm-change-email$/', function() {
     exit;
 });
 $router->addRoute('POST', '#^/update-profile-picture$#', [new UserController(), 'updateProfilePicture']);
-
+//$router->addRoute('POST', '#^/send-message$#', [new UserController(), 'handleContactFormSubmission']);
 $router->route();
 ?>

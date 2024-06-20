@@ -93,51 +93,67 @@ class UserController extends BaseController {
         echo ($response);
         exit;
     }
-    
     public function updateProfilePicture() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['isLogged']) && $_SESSION['isLogged'] === true) {
-            $userId = $_SESSION['user_id'];
-            $file_path = '';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_picture'])) {
+            $userId = $_SESSION['id']; // Assuming user ID is stored in session
     
-            if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-                $profilePicture = $_FILES['profile_picture'];
+            // Check if the user is logged in
+            if (!$userId) {
+                $_SESSION['message'] = 'You must be logged in to update your profile picture.';
+                $this->redirect('login');
+                exit;
+            }
+    
+            // Get the current profile picture path
+            $user = $this->userModel->getUserById($userId);
+            $userDecoded = json_decode($user, true);
+            $currentProfilePicture = $userDecoded['message']['file_path'];
+    
+            // Handling profile picture upload
+            $profilePicture = $_FILES['profile_picture'];
+            if ($profilePicture['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = __DIR__ . '/../uploads/';
-    
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
     
                 $uploadFile = $uploadDir . basename($profilePicture['name']);
-    
                 if (move_uploaded_file($profilePicture['tmp_name'], $uploadFile)) {
                     $file_path = '/web/proiect/app/uploads/' . basename($profilePicture['name']);
                     error_log("File uploaded successfully: " . $file_path);
+    
+                    // Delete the old profile picture if it exists
+                    if (!empty($currentProfilePicture)) {
+                        $oldFile = __DIR__ . '/../' . $currentProfilePicture;
+                        if (file_exists($oldFile)) {
+                            unlink($oldFile);
+                        }
+                    }
+    
+                    // Update the user's profile picture in the database
+                    $response = $this->userModel->updateProfilePicture($userId, $file_path);
+                    $responseDecoded = json_decode($response, true);
+    
+                    if ($responseDecoded['success']) {
+                        $_SESSION['profile_picture'] = $file_path;
+                        $_SESSION['message'] = 'Profile picture updated successfully.';
+                    } else {
+                        $_SESSION['message'] = 'Failed to update profile picture in the database.';
+                    }
                 } else {
                     $_SESSION['message'] = 'Failed to upload profile picture.';
-                    $this->redirect('myaccount');
-                    exit;
-                }
-    
-                // Update the file path in the database
-                $updateData = ['file_path' => $file_path];
-                $response = $this->userModel->updateUserById($userId, $updateData);
-                $responseDecoded = json_decode($response, true);
-    
-                if ($responseDecoded['success']) {
-                    $_SESSION['profile_picture'] = $file_path;
-                    $_SESSION['message'] = 'Profile picture updated successfully.';
-                } else {
-                    $_SESSION['message'] = 'Failed to update profile picture in the database.';
                 }
             } else {
-                $_SESSION['message'] = 'No file uploaded or upload error.';
+                $_SESSION['message'] = 'No profile picture uploaded or upload error.';
             }
+    
             $this->redirect('myaccount');
         } else {
-            $_SESSION['message'] = 'You must be logged in to update your profile picture.';
+            $_SESSION['message'] = 'Invalid request method.';
             $this->redirect('myaccount');
         }
     }
+    
     
     
     private function isValidPassword($password) {
