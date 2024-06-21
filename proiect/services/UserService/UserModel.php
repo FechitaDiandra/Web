@@ -85,7 +85,7 @@ class UserModel {
     }
 
     public function getAllUsers() {
-        $query = "SELECT * FROM users WHERE role = 'regular'";
+        $query = "SELECT * FROM users";
         $stmt = $this->connection->prepare($query);
         if ($stmt->execute()) {
             $result = $stmt->get_result();

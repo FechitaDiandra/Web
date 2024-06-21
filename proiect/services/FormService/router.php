@@ -14,19 +14,22 @@ switch ($method) {
     case 'POST':
         if ($request === 'form') {
             $formController->createForm();
-        }
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            echo json_encode(['message' => 'Not Found'], JSON_PRETTY_PRINT);
+        }   
         break;    
     case 'GET':
         if ($request === 'forms') {
             $formController->getAllForms();
         } else if ($request === 'public-forms') {
-            $formController->getPublicForms();
+            $formController->getPublicAvailableForms();
         } else if ($request === 'reported-forms') {
             $formController->getReportedForms();
-        } elseif (preg_match('/^form\/(\d+)$/', $request, $matches) && $request === 'form/'.$matches[1]) {
+        } else if (preg_match('/^form\/(\d+)$/', $request, $matches) && $request === 'form/'.$matches[1]) {
             $id = $matches[1];
             $formController->getFormById($id);
-        } elseif (preg_match('/^users-forms\/(\d+)$/', $request, $matches) && $request === 'users-forms/'.$matches[1]) {
+        } else if (preg_match('/^users-forms\/(\d+)$/', $request, $matches) && $request === 'users-forms/'.$matches[1]) {
             $userId = $matches[1];
             $formController->getFormsByUserId($userId);
         } else {

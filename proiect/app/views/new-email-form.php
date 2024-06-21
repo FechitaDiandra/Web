@@ -8,7 +8,7 @@ $token = $_SESSION['change_email_token'] ?? '';
 <html>
 <head>
   <title>FeedBack On Everything</title>
-  <link rel="stylesheet" type="text/css" href="css/signup-login.css">
+  <link rel="stylesheet" type="text/css" href="css/form.css">
 </head>
 <body>
 
@@ -16,13 +16,11 @@ $token = $_SESSION['change_email_token'] ?? '';
     <h1>Change Email</h1>
     <p>Please enter your new email address.</p>
     <hr>
-    <form class="change-email-form" action="confirm-change-email" method="post">
-      <?php
-        if (isset($_SESSION['message'])) {
-            echo "<div class='message'>" . $_SESSION['message'] . "</div>";
-            unset($_SESSION['message']);
-        }
-      ?>
+    <form class="form-container" action="confirm-change-email" method="post">
+      <?php if (isset($_SESSION['message'])): ?>
+        <p class="session-message"><?php echo $_SESSION['message']; ?></p>
+        <?php unset($_SESSION['message']); ?>
+      <?php endif; ?>
       <br><br>
       <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
       <label for="new-email"><b>New Email</b></label>

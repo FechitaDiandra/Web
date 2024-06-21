@@ -4,7 +4,7 @@
 <html>
 <head>
   <title>FeedBack On Everything</title>
-  <link rel="stylesheet" type="text/css" href="css/signup-login.css">
+  <link rel="stylesheet" type="text/css" href="css/login-register.css">
   <script>
     function submitRegistrationForm(event) {
       event.preventDefault();
@@ -13,16 +13,27 @@
         username: document.querySelector('input[name="username"]').value,
         email: document.querySelector('input[name="email"]').value,
         password: document.querySelector('input[name="password"]').value,
-        password_repeat: document.querySelector('input[name="password-repeat"]').value,
-        remember_me: document.querySelector('input[name="remember_me"]').checked,
-        terms: document.querySelector('input[name="terms"]').checked
+        password_repeat: document.querySelector('input[name="password-repeat"]').value
       };
 
       if (formData.password !== formData.password_repeat) {
-        alert('Passwords do not match.');
-        return; 
+        displayErrorMessage('Passwords do not match.');
+        return;
       }
 
+      if (formData.password.length < 8) {
+        displayErrorMessage('Password must be at least 8 characters long.');
+        return;
+      }
+
+      var specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+      if (!specialCharacters.test(formData.password)) {
+        displayErrorMessage('Password must contain at least one special character.');
+        return;
+      }
+      
+      clearErrorMessage();
+      
       //send the form data to the server
       fetch('http://localhost/web/proiect/app/register', {
         method: 'POST',
@@ -36,17 +47,29 @@
         if (data.success) {
           window.location.href = '/web/proiect/app/myaccount'; //redirect to myaccount page
         } else {
-          alert(data.message); //display error message
+          displayErrorMessage(data.message); //display error message
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again later.');
+        displayErrorMessage('An error occurred. Please try again later.');
       });
     }
 
+    function displayErrorMessage(message) {
+      var errorElement = document.getElementById('error-message');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+    }
+
+    function clearErrorMessage() {
+      var errorElement = document.getElementById('error-message');
+      errorElement.textContent = '';
+      errorElement.style.display = 'none';
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-      document.querySelector('.signup-form').addEventListener('submit', submitRegistrationForm);
+      document.querySelector('.form-container').addEventListener('submit', submitRegistrationForm);
     });
   </script>
 </head>
@@ -56,39 +79,37 @@
     <h1>Sign Up</h1>
     <p>Please fill in this form to create an account.</p>
     <hr>
-    <form class="signup-form" action="" method="post">
+    <form class="form-container" action="" method="post">
+
     <?php if (isset($_SESSION['message'])): ?>
-        <p><?php echo $_SESSION['message']; ?></p>
-        <?php unset($_SESSION['message']); ?>
+      <p class="session-message"><?php echo $_SESSION['message']; ?></p>
+      <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
-      <br><br>
 
-      <label for="username"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="username" required><br><br>
+    <label for="username"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username" required><br>
 
-      <label for="email"><b>Email</b></label>
-      <input type="email" placeholder="Enter Email" name="email" required><br><br>
+    <label for="email"><b>Email</b></label>
+    <input type="email" placeholder="Enter Email" name="email" required><br>
 
-      <label for="password"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="password" required><br><br>
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" required><br>
 
-      <label for="password-repeat"><b>Repeat Password</b></label>
-      <input type="password" placeholder="Repeat Password" name="password-repeat" required><br><br>
+    <label for="password-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="password-repeat" required>
 
-      <label>
-        <input type="checkbox" name="remember_me"> Remember me
-      </label>
+    <br><br>
+    <div class="checkbox-container">
+        <label for="terms" class="checkbox-label">
+            <input type="checkbox" name="terms" id="terms" required>
+            <span class="small-text">By creating an account you agree to our <a href="#">Terms & Privacy</a>.</span>
+        </label>
+    </div>
 
-      <label>
-        <input type="checkbox" name="terms" required>
-        <span class="small-text">By creating an account you agree to our</span>
-        <a href="#" style="color:dodgerblue" class="small-text">Terms & Privacy</a>.
-      </label>
-
-
-      <div class="clearfix">
-        <button type="submit" class="submitbutton">Sign Up</button>
-      </div>
+    <div id="error-message" style="display: none; color: red; margin-top: 10px;"></div>
+    <div class="clearfix">
+      <button type="submit" class="submitbutton">Sign Up</button>
+    </div>
     </form>
   </div>
 </body>

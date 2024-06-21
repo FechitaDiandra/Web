@@ -1,24 +1,11 @@
 <?php
 class UserModel {
     private $serviceUrl;
-    private $db;
-    private $host = 'localhost';
-    private $db_name = 'foe_app';
-    private $username = 'root';
-    private $password = '';
+
     public function __construct() {
         $this->serviceUrl = 'http://localhost/web/proiect/services/UserService/';
-        $this->db = new mysqli($this->host, $this->username, $this->password, $this->db_name);
+    }
 
-        if ($this->db->connect_error) {
-            die("Connection failed: " . $this->db->connect_error);
-        }
-    }
-    function customLog($message) {
-        $logFile = __DIR__ . '/../custom_log.txt';
-        $currentTime = date('Y-m-d H:i:s');
-        file_put_contents($logFile, "[$currentTime] $message" . PHP_EOL, FILE_APPEND);
-    }
     public function login($email, $password, $rememberMe) {
         $payload = json_encode([
             'email' => $email,
@@ -56,7 +43,8 @@ class UserModel {
         
         return $response; //returns the json encoded from the service call
     }
-    public function register($username, $email, $password, $rememberMe) {
+
+    public function register($username, $email, $password) {
         $payload = json_encode([
             'username' => $username,
             'email' => $email,
@@ -84,103 +72,62 @@ class UserModel {
             return json_encode(['success' => false, 'message' => $error_msg]);
         }
 
-        if ($httpcode === 200) {
-            if ($rememberMe) {
-                //set a cookie that expires in 30 days
-                // $token = $this->generateRememberMeToken($authenticatedUser->id);
-                // setcookie('remember_me_token', $token, time() + (30 * 24 * 60 * 60), '/');
-            }
-        } 
-        
         return $response; //returns the json encoded from the service call
     }
 
-    
-    private function isValidPassword($password) {
-        // Verificare minim 8 caractere, cel puțin o literă mare, o literă mică, un număr și un caracter special
-        $isValid = preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
-        error_log("Password validation result for '$password': " . ($isValid ? 'valid' : 'invalid'));
-        return $isValid;
+    public function getUserByEmail($email){
+        $ch = curl_init($this->serviceUrl . 'user/' . $email);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+        }
+        curl_close($ch);
+
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        if ($httpcode === 200) {
+                return $response; //returns the json encoded
+            }
+
+        return json_encode(['success' => false, 'message' => "Retrieving the user from the database didn't work."]);
     }
 
-    public function updateProfilePicture($userId, $file_path) {
-        $sql = "UPDATE users SET file_path = ? WHERE user_id = ?";
-        if ($stmt = $this->db->prepare($sql)) {
-            $stmt->bind_param('si', $file_path, $userId);
-    
-            if ($stmt->execute()) {
-                return json_encode(['success' => true]);
-            } else {
-                error_log("Database error: " . $stmt->error);
-                return json_encode(['success' => false, 'message' => 'Database error.']);
-            }
-    
-            $stmt->close();
-        } else {
-            error_log("Database error: " . $this->db->error);
-            return json_encode(['success' => false, 'message' => 'Database error.']);
-        }
-    }
-    
-    
     public function getUserById($id){
-        $sql = "SELECT * FROM users WHERE user_id = ?";
-        if ($stmt = $this->db->prepare($sql)) {
-            $stmt->bind_param('i', $id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $user = $result->fetch_assoc();
-            $stmt->close();
-    
-            if ($user) {
-                return json_encode(['success' => true, 'message' => $user]);
-            } else {
-                return json_encode(['success' => false, 'message' => 'User not found.']);
-            }
-        } else {
-            return json_encode(['success' => false, 'message' => 'Database error.']);
-        }
-    }
-    
-    public function updateUserById($userId, $userData) {
-        $setPart = [];
-        $params = [];
-        $types = '';
-    
-        foreach ($userData as $key => $value) {
-            $setPart[] = "$key = ?";
-            $params[] = $value;
-            $types .= 's';
-        }
-        $params[] = $userId;
-        $types .= 'i';
-    
-        $sql = "UPDATE users SET " . implode(', ', $setPart) . " WHERE user_id = ?";
-    
-        if ($stmt = $this->db->prepare($sql)) {
-            $stmt->bind_param($types, ...$params);
-    
-            if ($stmt->execute()) {
-                return json_encode(['success' => true]);
-            } else {
-                error_log("Database error: " . $stmt->error);
-                return json_encode(['success' => false, 'message' => 'Database error.']);
-            }
-    
-            $stmt->close();
-        } else {
-            error_log("Database error: " . $this->db->error);
-            return json_encode(['success' => false, 'message' => 'Database error.']);
-        }
-    }
-    
+        $ch = curl_init($this->serviceUrl . 'user/' . $id);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    public function deleteUser($userId) {
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+        }
+        curl_close($ch);
+
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        if ($httpcode === 200) {
+                return $response; //returns the json encoded
+            }
+
+        return json_encode(['success' => false, 'message' => "Retrieving the user from the database didn't work."]);
+    }
+
+    public function updateUserById($userId, $userData) {
         $curl = curl_init($this->serviceUrl . 'user/' . $userId);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($userData));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
+        $response = json_decode(curl_exec($curl), true);
         $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
         if (curl_errno($curl)) {
             $error_msg = curl_error($curl);
         }
@@ -188,11 +135,49 @@ class UserModel {
         curl_close($curl);
 
         if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg, 'http_code' => $httpcode]);
+        }
+        
+    
+        if ($httpcode === 200) {
+            return json_encode(['success' => true, 'data' => $response]);
+        }        
+
+        return json_encode(['success' => false, 'message' => $response['message']]);
+    }
+
+    public function deleteUser($userId) {
+        //delete the user's forms
+        $curl = curl_init('http://localhost/web/proiect/services/FormService/users-forms/' . $userId);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $responseForms = curl_exec($curl);
+        $httpcodeForms = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        
+        //delete the account
+        $curl = curl_init($this->serviceUrl . 'user/' . $userId);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $responseUser = curl_exec($curl);
+        $httpcodeUser = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
+        if (isset($error_msg)) {
             return json_encode(['success' => false, 'message' => $error_msg]);
         }
     
-        if ($httpcode === 200) {
-            return $response; //returns the json encoded
+        if ($httpcodeUser === 200 && $httpcodeForms === 200) {
+            return $responseUser; //returns the json encoded
         }
 
         return json_encode(['success' => false, 'message' => "Deleting the user didn't work as expected."]);
@@ -242,30 +227,7 @@ class UserModel {
         }
         return false;
     }
-   
-    public function getUserByEmail($email){
-        $ch = curl_init($this->serviceUrl . 'user/' . $email);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if (curl_errno($ch)) {
-            $error_msg = curl_error($ch);
-        }
-        curl_close($ch);
-
-        if (isset($error_msg)) {
-            return json_encode(['success' => false, 'message' => $error_msg]);
-        }
-
-        if ($httpcode === 200) {
-                return $response; //returns the json encoded
-            }
-
-        return json_encode(['success' => false, 'message' => "Retrieving the user from the database didn't work."]);
-    }
-
-    
     public function isResetPasswordTokenValid($token) {
         $id = $this->getUserIdByResetPasswordToken($token);
         if(!$id) 

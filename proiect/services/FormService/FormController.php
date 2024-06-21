@@ -21,8 +21,8 @@ class FormController {
         echo json_encode(['success' => $result['success'], 'message' => $result['message']], JSON_PRETTY_PRINT);
     }
 
-    public function getPublicForms() {
-        $result = $this->formModel->getPublicForms();
+    public function getPublicAvailableForms() {
+        $result = $this->formModel->getPublicAvailableForms();
         http_response_code($result['success'] ? 200 : 500);
         echo json_encode(['success' => $result['success'], 'message' => $result['message']], JSON_PRETTY_PRINT);
     }
