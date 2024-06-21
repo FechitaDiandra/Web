@@ -1,21 +1,23 @@
 <?php
 require_once 'controllers/UserController.php';
+require_once 'controllers/FormController.php';
 require_once 'controllers/WebpagesController.php';
+require_once 'controllers/AnswerController.php';
 $router = Router::getInstance();
 
-//PAGE RENDERING ROUTES
-$router->addRoute('GET', '/^\/home$/', function() {
-    (new WebpagesController())->showHomePage();
-    exit;
-});
-
-$router->addRoute('GET', '/^\/$/', function() {
-    (new WebpagesController())->showHomePage();
-    exit;
-});
-
+//SIMPLE PAGES RENDERING ROUTES 
 $router->addRoute('GET', '/^\/login$/', function() {
     (new WebpagesController())->showLoginForm();
+    exit;
+});
+
+$router->addRoute('GET', '/^\/wheel$/', function() {
+    (new WebpagesController())->showWheel();
+    exit;
+});
+
+$router->addRoute('GET', '/^\/admin$/', function() {
+    (new WebpagesController())->showAdminPage();
     exit;
 });
 
@@ -36,11 +38,6 @@ $router->addRoute('GET', '/^\/myaccount$/', function() {
 
 $router->addRoute('GET', '/^\/create-form$/', function() {
     (new WebpagesController())->showCreateFormPage();
-    exit;
-});
-
-$router->addRoute('GET', '/^\/form-history$/', function() {
-    (new WebpagesController())->showMyFormsPage();
     exit;
 });
 
@@ -168,6 +165,107 @@ $router->addRoute('POST', '/^\/confirm-change-email$/', function() {
     exit;
 });
 
+
+
+
+
+//form-related routes
+$router->addRoute('POST', '/^\/create-form$/', function() {
+    (new FormController())->createForm();
+    exit;
+});
+
+$router->addRoute('POST', '/^\/submit-feedback$/', function() {
+    $id = $_POST['form_id'] ?? null;
+    (new AnswerController())->answerForm($id);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/form-history$/', function() {
+    $formController = new FormController();
+    $forms = $formController->getFormsByLoggedUser();
+    (new WebpagesController())->showMyFormsPage($forms);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/home$/', function() {
+    $formController = new FormController();
+    $forms = $formController->getLatestForms();
+    (new WebpagesController())->showHomePage($forms);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/$/', function() {
+    $formController = new FormController();
+    $forms = $formController->getLatestForms();
+    (new WebpagesController())->showHomePage($forms);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/delete-form$/', function() {
+    $id = $_GET['id'] ?? null;
+    (new FormController())->deleteForm($id);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/view-form$/', function() {
+    $id = $_GET['id'] ?? null;
+    $formController = new FormController();
+    $answerController = new AnswerController();
+    $form = $formController->getFormById($id);
+    $answers = $answerController->getAnswersByFormId($id);
+    (new WebpagesController())->showViewFormPage($form, $answers);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/answer-form$/', function() {
+    $id = $_GET['id'] ?? null;
+    $formController = new FormController();
+    $form = $formController->getFormById($id);
+    (new WebpagesController())->showAnswerFormPage($form);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/report-form$/', function() {
+    $id = $_GET['id'] ?? null;
+    $formController = new FormController();
+    $report = $formController->reportForm($id);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/view-statistics$/', function() {
+    $id = $_GET['id'] ?? null;
+    $answerController = new AnswerController();
+    $formController = new FormController();
+    $form = $formController->getFormById($id);
+    $statistics = $answerController->getStatisticsByFormId($id);
+    (new WebpagesController())->showStatisticsPage($statistics, $form);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/export$/', function() {
+    $formId = $_GET['id'] ?? null;
+    $type = $_GET['type'] ?? null;
+
+    $answerController = new AnswerController();
+    $formController = new FormController();
+    $form = $formController->getFormById($formId);
+    if ($form) {
+        $statistics = $answerController->getStatisticsByFormId($formId);
+        if ($statistics) {
+            $exportData = $answerController->exportStatistics($statistics, $formId, $type);
+            if ($exportData !== false) {
+                header("Content-Type: application/octet-stream");
+                header("Content-Disposition: attachment; filename=statistics_export.$type");
+
+                echo $exportData;
+                exit;
+            }
+        }
+    }
+    $this->redirect("view-statistics?id=$formId");
+
+});
 
 $router->route();
 ?>

@@ -44,7 +44,7 @@ class UserModel {
         return $response; //returns the json encoded from the service call
     }
 
-    public function register($username, $email, $password, $rememberMe) {
+    public function register($username, $email, $password) {
         $payload = json_encode([
             'username' => $username,
             'email' => $email,
@@ -72,14 +72,6 @@ class UserModel {
             return json_encode(['success' => false, 'message' => $error_msg]);
         }
 
-        if ($httpcode === 200) {
-            if ($rememberMe) {
-                //set a cookie that expires in 30 days
-                // $token = $this->generateRememberMeToken($authenticatedUser->id);
-                // setcookie('remember_me_token', $token, time() + (30 * 24 * 60 * 60), '/');
-            }
-        } 
-        
         return $response; //returns the json encoded from the service call
     }
 
@@ -155,23 +147,37 @@ class UserModel {
     }
 
     public function deleteUser($userId) {
-        $curl = curl_init($this->serviceUrl . 'user/' . $userId);
+        //delete the user's forms
+        $curl = curl_init('http://localhost/web/proiect/services/FormService/users-forms/' . $userId);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
-        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $responseForms = curl_exec($curl);
+        $httpcodeForms = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         if (curl_errno($curl)) {
             $error_msg = curl_error($curl);
         }
-
         curl_close($curl);
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
 
+        
+        //delete the account
+        $curl = curl_init($this->serviceUrl . 'user/' . $userId);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $responseUser = curl_exec($curl);
+        $httpcodeUser = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
         if (isset($error_msg)) {
             return json_encode(['success' => false, 'message' => $error_msg]);
         }
     
-        if ($httpcode === 200) {
-            return $response; //returns the json encoded
+        if ($httpcodeUser === 200 && $httpcodeForms === 200) {
+            return $responseUser; //returns the json encoded
         }
 
         return json_encode(['success' => false, 'message' => "Deleting the user didn't work as expected."]);

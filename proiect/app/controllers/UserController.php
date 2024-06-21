@@ -68,7 +68,7 @@ class UserController extends BaseController {
         $password = $data['password'];
         $rememberMe = isset($data['remember_me']) && $data['remember_me'];
 
-        $response = $this->userModel->register($username, $email, $password, $rememberMe);  //gets the response as json from the model
+        $response = $this->userModel->register($username, $email, $password);  //gets the response as json from the model
         $responseDecoded = json_decode($response, true);
 
         if ($responseDecoded['success']) {

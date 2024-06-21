@@ -1,56 +1,70 @@
-
 <?php
-require_once 'entities/Answer.php';
-
 class AnswerModel {
-
-    private $mysql;
+    private $serviceUrl;
 
     public function __construct() {
-        $this->mysql = new mysqli('localhost', 'root', '', 'foe_app');
-        if (mysqli_connect_errno()) {
-            die('Conexiunea a eșuat: ' . mysqli_connect_error());
-        }
+        $this->serviceUrl = 'http://localhost/web/proiect/services/AnswerService/';
     }
 
-    // Crearea unui răspuns nou
-    public function createAnswer($form_id, $user_id, $response) {
-        $stmt = $this->mysql->prepare("INSERT INTO answers (form_id, user_id, response) VALUES (?, ?, ?)");
-        if ($stmt === false) {
-            die('Error preparing statement: ' . $this->mysql->error);
+    public function answerForm($formData) {
+        $curl = curl_init($this->serviceUrl . 'answer');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $jsonData = json_encode($formData);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
+
+        $response = curl_exec($curl);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
         }
-        $stmt->bind_param("iis", $form_id, $user_id, $response);
-        if (!$stmt->execute()) {
-            die('A survenit o eroare la crearea răspunsului: ' . $stmt->error);
+
+        curl_close($curl);
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
         }
-        $stmt->close();
+
+        return $response;
     }
 
-    // Obținerea unui răspuns după ID (opțional, dacă este necesar)
-    public function getAnswerById($answer_id) {
-        $stmt = $this->mysql->prepare("SELECT * FROM answers WHERE answer_id = ?");
-        if ($stmt === false) {
-            die('Error preparing statement: ' . $this->mysql->error);
+    public function getAnswersByFormId($id) {
+        $curl = curl_init($this->serviceUrl . 'answers/' . $id);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
         }
-        $stmt->bind_param("i", $answer_id);
-        if (!$stmt->execute()) {
-            die('A survenit o eroare la obținerea răspunsului: ' . $stmt->error);
-        }
-        $result = $stmt->get_result();
-        $answer_data = $result->fetch_assoc();
-        $stmt->close();
+        curl_close($curl);
 
-        if ($answer_data) {
-            return new Answer(
-                $answer_data['answer_id'],
-                $answer_data['form_id'],
-                $answer_data['user_id'],
-                $answer_data['response'],
-                $answer_data['created_at']
-            );
-        } else {
-            return null;
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
         }
+
+        if ($httpcode === 200) {
+            return $response; //returns the json encoded
+        }
+
+        return json_encode(['success' => false, 'message' => "Retrieving the answers for your form from the database didn't work as expected."]);
+    }
+    
+    public function getStatisticsByFormId($id) {
+        $curl = curl_init($this->serviceUrl . 'get-statistics/' . $id);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
+
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        if ($httpcode === 200) {
+            return $response; //returns the json encoded
+        }
+
+        return json_encode(['success' => false, 'message' => "Retrieving the statistics for your form from the database didn't work as expected."]);
     }
 }
-?>

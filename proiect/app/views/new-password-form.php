@@ -8,7 +8,7 @@ $token = $_SESSION['reset_password_token'] ?? '';
 <html>
 <head>
   <title>FeedBack On Everything</title>
-  <link rel="stylesheet" type="text/css" href="css/signup-login.css">
+  <link rel="stylesheet" type="text/css" href="css/form.css">
 </head>
 <body>
 
@@ -16,13 +16,11 @@ $token = $_SESSION['reset_password_token'] ?? '';
     <h1>Update password</h1>
     <p></p>
     <hr>
-    <form class="change-password-form" action="confirm-reset-password" method="post">
-      <?php
-        if (isset($_SESSION['message'])) {
-            echo "<div class='message'>" . $_SESSION['message'] . "</div>";
-            unset($_SESSION['message']);
-        }
-      ?>
+    <form class="form-container" action="confirm-reset-password" method="post">
+      <?php if (isset($_SESSION['message'])): ?>
+        <p class="session-message"><?php echo $_SESSION['message']; ?></p>
+        <?php unset($_SESSION['message']); ?>
+      <?php endif; ?>
       <br><br>
       <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
       <label for="password"><b>Password</b></label>
