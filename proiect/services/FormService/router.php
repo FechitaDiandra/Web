@@ -41,6 +41,9 @@ switch ($method) {
         if (preg_match('/^report-form\/(\d+)$/', $request, $matches) && $request === 'report-form/'.$matches[1]) {
             $formId = $matches[1];
             $formController->reportForm($formId);
+        } else if (preg_match('/^cancel-report-form\/(\d+)$/', $request, $matches) && $request === 'cancel-report-form/'.$matches[1]) {
+            $formId = $matches[1];
+            $formController->cancelReportForm($formId);
         } else {
             header("HTTP/1.0 404 Not Found");
             echo json_encode(['message' => 'Not Found'], JSON_PRETTY_PRINT);

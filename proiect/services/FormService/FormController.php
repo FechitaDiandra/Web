@@ -51,6 +51,12 @@ class FormController {
         echo json_encode(['success' => $result['success'], 'message' => $result['message']], JSON_PRETTY_PRINT);
     }
 
+    public function cancelReportForm($formId) {
+        $result = $this->formModel->cancelReportForm($formId);
+        http_response_code($result['success'] ? 200 : 500);
+        echo json_encode(['success' => $result['success'], 'message' => $result['message']], JSON_PRETTY_PRINT);
+    }
+
     public function deleteForm($id) {
         $result = $this->formModel->deleteForm($id);
         http_response_code($result['success'] ? 200 : 500);

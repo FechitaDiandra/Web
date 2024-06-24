@@ -70,6 +70,17 @@ class FormController extends BaseController {
         return "Error retrieving your forms.";
     }
 
+    public function getFormsByUserId($id) {
+        $response = $this->formModel->getFormsByUserId($id);
+        $responseDecoded = json_decode($response, true);
+        
+        if($responseDecoded['success']) {
+            return $responseDecoded['message'];
+        }
+
+        return "Error retrieving your forms.";
+    }
+
     public function getLatestForms() {
         $response = $this->formModel->getPublicAvailableForms();
         $responseDecoded = json_decode($response, true);

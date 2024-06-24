@@ -10,33 +10,49 @@ class UserController extends BaseController {
         $this->userModel = new UserModel();
     }
 
+    public function getUserById($id) {
+        $response = $this->userModel->getUserById($id);
+        $responseDecoded = json_decode($response, true);
+        
+        if($responseDecoded['success']) {
+            return $responseDecoded['message'];
+        }
+
+        return "Error retrieving your account details..";
+    }
 
     public function login() {
-        $data = json_decode(file_get_contents('php://input'), true);
-        if (!isset($data['email']) || !isset($data['password'])) {
-            echo json_encode(['success' => false, 'message' => 'Email and password are required.']);
-            exit;
-        }
-        $email = $data['email'];
-        $password = $data['password'];
-        $rememberMe = isset($data['remember_me']) && $data['remember_me'];
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $rememberMe = isset($_POST['remember_me']) && $_POST['remember_me'];
 
-        $response = $this->userModel->login($email, $password, $rememberMe); //gets the response as json from the model
+        if (empty($email) || empty($password)) {
+            $_SESSION['message'] = 'Email and password are required.';
+            $this->redirect('login');
+        }
+
+        $response = $this->userModel->login($email, $password, $rememberMe);
         $responseDecoded = json_decode($response, true);
 
         if ($responseDecoded['success']) {
-            $_SESSION['isLogged'] = true;
-            $_SESSION['email'] = $email;
             $user = $this->userModel->getUserByEmail($email);
-            if($user) {
-                $userDecoded = json_decode($user, true);
+            $userDecoded = json_decode($user, true);
+
+            if ($userDecoded['success']) {
+                $_SESSION['isLogged'] = true;
+                $_SESSION['email'] = $email;
                 $_SESSION['id'] = $userDecoded['message']['user_id'];
                 $_SESSION['username'] = $userDecoded['message']['username'];
+                $_SESSION['role'] = $userDecoded['message']['role'];
+                $this->redirect('myaccount');
+            } else {
+                $_SESSION['message'] = 'Failed to retrieve user details.';
             }
+        } else {
+            $_SESSION['message'] = $responseDecoded['message'];
         }
 
-        header('Content-Type: application/json');
-        echo ($response);
+        $this->redirect('login');
         exit;
     }
 
@@ -56,34 +72,37 @@ class UserController extends BaseController {
     }
 
     public function register() {
-        $data = json_decode(file_get_contents('php://input'), true);
-        
-        if (!isset($data['username']) || !isset($data['email']) || !isset($data['password'])) {
-            echo json_encode(['success' => false, 'message' => 'Username, email, and password are required.']);
-            exit;
+        $username = $_POST['username'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        if (empty($username) || empty($email) || empty($password)) {
+            $_SESSION['message'] = 'Username, email, and password are required.';
+            $this->redirect('register');
         }
 
-        $username = $data['username'];
-        $email = $data['email'];
-        $password = $data['password'];
-        $rememberMe = isset($data['remember_me']) && $data['remember_me'];
-
-        $response = $this->userModel->register($username, $email, $password);  //gets the response as json from the model
+        $response = $this->userModel->register($username, $email, $password);
         $responseDecoded = json_decode($response, true);
 
         if ($responseDecoded['success']) {
-            $_SESSION['isLogged'] = true;
-            $_SESSION['username'] = $username;
-            $_SESSION['email'] = $email;
             $user = $this->userModel->getUserByEmail($email);
-            if($user) {
-                $userDecoded = json_decode($user, true);
+            $userDecoded = json_decode($user, true);
+
+            if ($userDecoded['success']) {
+                $_SESSION['isLogged'] = true;
+                $_SESSION['username'] = $username;
+                $_SESSION['email'] = $email;
                 $_SESSION['id'] = $userDecoded['message']['user_id'];
+                $_SESSION['role'] = $userDecoded['message']['role'];
+                $this->redirect('myaccount');
+            } else {
+                $_SESSION['message'] = 'Failed to retrieve user details.';
             }
+        } else {
+            $_SESSION['message'] = $responseDecoded['message'];
         }
 
-        header('Content-Type: application/json');
-        echo ($response);
+        $this->redirect('register');
         exit;
     }
 
@@ -347,5 +366,23 @@ class UserController extends BaseController {
         $this->render('new-email-form', ['token' => $token]);
     }
 
+    public function sendEmailFromContactPage(){
+        $name = htmlspecialchars($_POST['name']);
+        $email = htmlspecialchars($_POST['email']);
+        $message = htmlspecialchars($_POST['message']);
+
+        $to = "contact2feedbackoneverything@gmail.com";
+        $subject = "New Contact Form Submission";
+        $body = "Name: $name\nEmail: $email\n\nMessage:\n$message";
+        $headers = "From: $email";
+
+        if (mail($to, $subject, $body, $headers)) {
+            $_SESSION['message'] = "Your message has been sent successfully!";
+        } else {
+            $_SESSION['message'] = "There was an error sending your message. Please try again.";
+        }
+
+        $this->redirect('contact');
+    }
 }
 ?>

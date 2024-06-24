@@ -1,0 +1,112 @@
+/* Your existing CSS styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+input::placeholder, 
+textarea::placeholder {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #999;
+}
+
+.container {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.message {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.message h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.message-details {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.message-details span {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.message-body {
+    display: none;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.message-content {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.response-form {
+    margin-top: 10px;
+    display: none;
+}
+
+.response-form textarea {
+    width: calc(100% - 20px);
+    height: 100px;
+    resize: vertical;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.response-form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.response-form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.import-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.import-form label {
+    margin-bottom: 10px;
+}

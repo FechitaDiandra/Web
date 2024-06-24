@@ -23,15 +23,5 @@
     <p>Our platform ensures anonymity throughout the feedback process, and the generated reports provide a comprehensive overview of the sentiments expressed. Reports are available in multiple formats (HTML, CSV, JSON) for your convenience in analysis and presentation.</p>
     <p>Thank you for choosing to use our web tool for anonymous feedback. We aim to provide you with the best experience and ensure that your voice matters!</p>
   </div>
-
-<?php
-  echo '<pre>';
-  print_r($_SESSION);
-  echo '</pre>';
-  echo '<pre>';
-  var_dump($_SESSION);
-  echo '</pre>';
-  echo session_id();
-?>
 </body>
 </html>

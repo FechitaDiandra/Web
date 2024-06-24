@@ -12,7 +12,18 @@ class WebpagesController extends BaseController {
     }
 
     public function showAdminPage() {
-        $this->render('admin');
+        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['role'] === 'admin')
+            $this->render('admin');
+        else
+        $this->redirect('login');
+    }
+
+    public function showContactPage() {
+        $this->render('contact');
+    }
+
+    public function showEmailPage() {
+        $this->render('email');
     }
 
     public function showWheel() {
@@ -27,39 +38,67 @@ class WebpagesController extends BaseController {
     }
 
     public function showMyAccountPage() {
-        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'])
+        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['role'] != 'admin')
             $this->render('myaccount');
         else
-            $this->redirect('login');
+            $this->redirect('home');
     }
 
     public function showMyFormsPage($forms) {
-        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'])
+        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['role'] != 'admin') {
             $this->render('form-history', ['forms' => $forms]);
-        else
+        } else
+            $this->redirect('login');
+    }
+
+    public function showInboxPage($messages) {
+        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['role'] === 'admin') {
+            $this->render('inbox', ['messages' => $messages]);
+        } else
             $this->redirect('login');
     }
 
     public function showCreateFormPage() {
-        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'])
+        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['role'] != 'admin') {
             $this->render('create-form');
-        else
+        } else
             $this->redirect('login');
     }
 
     public function showViewFormPage($form, $answers) {
-        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['id'] === $form['user_id'])
-            $this->render('view-form', ['form' => $form, 'answers' => $answers]);
-        else 
-        $this->render('view-form', ['form' => $form, 'answers' => '']);
+        if (isset($_SESSION['isLogged']) && $_SESSION['isLogged']) {
+            if (isset($_SESSION['id']) &&  $_SESSION['id'] === $form['user_id'] || $_SESSION['role'] === 'admin') {
+                $this->render('view-form', ['form' => $form, 'answers' => $answers]);
+            } else {
+                $this->render('view-form', ['form' => $form, 'answers' => '']);
+            }
+        } else {
+            $this->render('view-form', ['form' => $form, 'answers' => '']);
+        }
     }
 
+    public function showViewProfilePage($forms, $user) {
+        if (isset($_SESSION['isLogged']) && $_SESSION['isLogged'])
+            if (isset($_SESSION['id']) &&  $_SESSION['id'] === $user['user_id'] || $_SESSION['role'] === 'admin') {
+                $this->render('view-profile', ['forms' => $forms, 'user' => $user]);
+            } else {
+                $this->redirect('login');
+            }
+        else {
+            $this->redirect('login');
+        }
+    }
 
     public function showStatisticsPage($statistics, $form) {
-        if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] && $_SESSION['id'] === $form['user_id'])
-            $this->render('view-statistics', ['statistics' => $statistics, 'form' => $form]);
-        else 
-        $this->render('view-form', ['form' => $form, 'answers' => '']);
+        if (isset($_SESSION['isLogged']) && $_SESSION['isLogged']) {
+            if (isset($_SESSION['id']) &&  $_SESSION['id'] === $form['user_id'] || $_SESSION['role'] === 'admin') {
+                $this->render('view-statistics', ['statistics' => $statistics, 'form' => $form]);
+            } else {
+                $this->render('view-form', ['form' => $form, 'answers' => '']);
+            }
+        } else {
+            $this->render('view-form', ['form' => $form, 'answers' => '']);
+        }
     }
 
     public function showHomePage($forms) {

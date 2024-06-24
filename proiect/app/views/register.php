@@ -31,29 +31,10 @@
         displayErrorMessage('Password must contain at least one special character.');
         return;
       }
-      
+
       clearErrorMessage();
-      
-      //send the form data to the server
-      fetch('http://localhost/web/proiect/app/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          window.location.href = '/web/proiect/app/myaccount'; //redirect to myaccount page
-        } else {
-          displayErrorMessage(data.message); //display error message
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        displayErrorMessage('An error occurred. Please try again later.');
-      });
+
+      document.querySelector('.form-container').submit();
     }
 
     function displayErrorMessage(message) {
@@ -72,6 +53,7 @@
       document.querySelector('.form-container').addEventListener('submit', submitRegistrationForm);
     });
   </script>
+
 </head>
 <body>
 
@@ -79,7 +61,7 @@
     <h1>Sign Up</h1>
     <p>Please fill in this form to create an account.</p>
     <hr>
-    <form class="form-container" action="" method="post">
+    <form class="form-container" action="register" method="post">
 
     <?php if (isset($_SESSION['message'])): ?>
       <p class="session-message"><?php echo $_SESSION['message']; ?></p>

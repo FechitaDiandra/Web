@@ -31,7 +31,7 @@ class FormModel {
         $to = $email;
         $subject = "Form Created Successfully!";
         $message = "Your form has been successfully created! Here is the link you can use to collect responses for your form: $formLink";
-        $headers = "From: contactfeedbackoneverything@gmail.com";
+        $headers = "From: contact2feedbackoneverything@gmail.com";
     
         return mail($to, $subject, $message, $headers);
     }
@@ -72,11 +72,7 @@ class FormModel {
             return json_encode(['success' => false, 'message' => $error_msg]);
         }
 
-        if ($httpcode === 200) {
-            return $response; //returns the json encoded
-        }
-
-        return json_encode(['success' => false, 'message' => "Retrieving the user's forms from the database didn't work."]);
+        return $response; //returns the json encoded
     }
 
     public function getFormById($formId) {

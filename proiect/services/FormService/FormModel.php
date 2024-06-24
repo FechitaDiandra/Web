@@ -93,7 +93,7 @@ class FormModel {
         if ($forms) {
             return ['success' => true, 'message' => $forms];
         } else {
-            return ['success' => true, 'message' => 'The user with the id ' . $userId . " doesn't have any forms."];
+            return ['success' => false, 'message' => 'The user with the id ' . $userId . " doesn't have any forms."];
         }
     }
 
@@ -103,8 +103,9 @@ class FormModel {
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $form = $result->fetch_assoc();
-        if ($form) {
+        
+        if ($result->num_rows > 0) {
+            $form = $result->fetch_assoc();
             return ['success' => true, 'message' => $form];
         } else {
             return ['success' => false, 'message' => 'No form found with id ' . $id];
@@ -143,29 +144,86 @@ class FormModel {
             return ['success' => false, 'message' => 'Form does not exist'];
         }
     }
+
+    public function cancelReportForm($formId) {
+        $checkQuery = "SELECT * FROM forms WHERE form_id = ?";
+        $checkStmt = $this->connection->prepare($checkQuery);
+        $checkStmt->bind_param("i", $formId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
     
-    public function deleteForm($id) {
-        $query = "DELETE FROM forms WHERE form_id = ?";
-        $stmt = $this->connection->prepare($query);
-        $stmt->bind_param("i", $id);
-        if ($stmt->execute()) {
-            if ($stmt->affected_rows > 0) {
-                return ['success' => true, 'message' => 'Form deleted successfully'];
+        if ($result->num_rows > 0) {
+            $query = "UPDATE forms SET reported = 0 WHERE form_id = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param("i", $formId);
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Form reported successfully'];
             } else {
-                return ['success' => false, 'message' => 'No form found with ID ' . $id];
+                return ['success' => false, 'message' => $this->connection->error];
             }
         } else {
-            return ['success' => false, 'message' => $this->connection->error];
+            return ['success' => false, 'message' => 'Form does not exist'];
         }
     }
+    
+    public function deleteForm($id) {
+        //find the file associated with the form
+        $query = "SELECT file_path FROM forms WHERE form_id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            $form = $result->fetch_assoc();
+            $filePath = '../../user-uploads/' . $form['file_path'];
+            
+            //delete the form
+            $query = "DELETE FROM forms WHERE form_id = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param("i", $id);
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    //delete the file if it exists
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                    return ['success' => true, 'message' => 'Form and associated file deleted successfully'];
+                } else {
+                    return ['success' => false, 'message' => 'No form found with ID ' . $id];
+                }
+            } else {
+                return ['success' => false, 'message' => $this->connection->error];
+            }
+        } else {
+            return ['success' => false, 'message' => 'No form found with ID ' . $id];
+        }
+    }
+    
 
     public function deleteFormsByUserId($userId) {
+        //get the file paths associated with the forms
+        $query = "SELECT file_path FROM forms WHERE user_id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $forms = $result->fetch_all(MYSQLI_ASSOC);
+        foreach ($forms as $form) {
+            $filePath = '../../user-uploads/' . $form['file_path'];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+    
+        // Delete the forms
         $query = "DELETE FROM forms WHERE user_id = ?";
         $stmt = $this->connection->prepare($query);
         $stmt->bind_param("i", $userId);
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                return ['success' => true, 'message' => 'Forms deleted successfully'];
+                return ['success' => true, 'message' => 'Forms and associated files deleted successfully'];
             } else {
                 return ['success' => true, 'message' => 'The user with the id ' . $userId . " doesn't have any forms."];
             }
@@ -173,4 +231,5 @@ class FormModel {
             return ['success' => false, 'message' => $this->connection->error];
         }
     }
+    
 }

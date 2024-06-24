@@ -62,8 +62,9 @@ class UserModel {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-        if ($user) {
+        
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
             return ['success' => true, 'message' => $user];
         } else {
             return ['success' => false, 'message' => 'No user found with email ' . $email];
@@ -76,8 +77,9 @@ class UserModel {
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-        if ($user) {
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
             return ['success' => true, 'message' => $user];
         } else {
             return ['success' => false, 'message' => 'No user found with id ' . $id];
@@ -85,16 +87,16 @@ class UserModel {
     }
 
     public function getAllUsers() {
-        $query = "SELECT * FROM users";
+        $query = "SELECT * FROM users WHERE role = 'regular' ORDER BY user_id DESC";
         $stmt = $this->connection->prepare($query);
         if ($stmt->execute()) {
             $result = $stmt->get_result();
             $users = $result->fetch_all(MYSQLI_ASSOC);
             return ['success' => true, 'message' => $users];
         } else {
-            return  ['success' => false, 'message' => $this->connection->error];
+            return ['success' => false, 'message' => $this->connection->error];
         }
-    }
+    }    
 
     public function updateUser($id, $userData) {
         //VERIFY FIRST THAT THE USER WITH THE SPECIFIED ID EXISTS IN THE DATABASE

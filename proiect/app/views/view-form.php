@@ -69,10 +69,6 @@
       </div>
       <br>
 
-      <div class="button-container">
-        <a href="create-form" class="button">Create Another Form</a>
-      </div>
-
       <?php if (isset($answers) && !empty($answers)): ?>
         <br><br><br>
         <h2>Answers:</h2>

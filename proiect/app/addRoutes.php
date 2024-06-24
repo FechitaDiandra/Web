@@ -3,6 +3,7 @@ require_once 'controllers/UserController.php';
 require_once 'controllers/FormController.php';
 require_once 'controllers/WebpagesController.php';
 require_once 'controllers/AnswerController.php';
+require_once 'controllers/AdminController.php';
 $router = Router::getInstance();
 
 //SIMPLE PAGES RENDERING ROUTES 
@@ -11,15 +12,49 @@ $router->addRoute('GET', '/^\/login$/', function() {
     exit;
 });
 
+$router->addRoute('GET', '/^\/contact$/', function() {
+    (new WebpagesController())->showContactPage();
+    exit;
+});
+
+$router->addRoute('GET', '/^\/email$/', function() {
+    (new WebpagesController())->showEmailPage();
+    exit;
+});
+
 $router->addRoute('GET', '/^\/wheel$/', function() {
     (new WebpagesController())->showWheel();
     exit;
 });
 
+
 $router->addRoute('GET', '/^\/admin$/', function() {
     (new WebpagesController())->showAdminPage();
     exit;
 });
+
+$router->addRoute('GET', '/^\/inbox$/', function() {
+    $adminController = new AdminController();
+    $messages = $adminController->getAllMessages();
+    (new WebpagesController())->showInboxPage($messages);
+    exit;
+});
+
+$router->addRoute('POST', '/^\/import-database$/', function() {
+    (new AdminController())->importDatabase();
+    (new WebpagesController())->showAdminPage();
+    exit;
+});
+
+$router->addRoute('POST', '/^\/send-response$/', function() {
+    (new AdminController())->sendResponse();
+    exit;
+});
+
+$router->addRoute('GET', '/^\/export-database$/', function() {
+    (new AdminController())->exportDatabase();
+});
+
 
 $router->addRoute('GET', '/^\/aboutus$/', function() {
     (new WebpagesController())->showAboutUsPage();
@@ -67,6 +102,11 @@ $router->addRoute('GET', '/^\/logout$/', function() {
 
 $router->addRoute('POST', '/^\/update-username$/', function() {
     (new UserController())->updateUsername();
+    exit;
+});
+
+$router->addRoute('POST', '/^\/send-email$/', function() {
+    (new UserController())->sendEmailFromContactPage();
     exit;
 });
 
@@ -215,6 +255,16 @@ $router->addRoute('GET', '/^\/view-form$/', function() {
     $form = $formController->getFormById($id);
     $answers = $answerController->getAnswersByFormId($id);
     (new WebpagesController())->showViewFormPage($form, $answers);
+    exit;
+});
+
+$router->addRoute('GET', '/^\/view-profile$/', function() {
+    $id = $_GET['id'] ?? null;
+    $formController = new FormController();
+    $userController = new UserController();
+    $forms = $formController->getFormsByUserId($id);
+    $user = $userController->getUserById($id);
+    (new WebpagesController())->showViewProfilePage($forms, $user);
     exit;
 });
 

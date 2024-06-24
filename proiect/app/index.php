@@ -17,6 +17,7 @@ if (!isset($_SESSION['isLogged'])) {
     $_SESSION['isLogged'] = false;
 }
 
+require_once 'create_admin.php';
 require_once 'router.php';
 require_once 'addRoutes.php';
 
