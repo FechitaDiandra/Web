@@ -1,65 +1,180 @@
 <?php require_once 'header.php'; ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Forms History</title>
-    <link rel="stylesheet" type="text/css" href="css/view-statistics.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Statistics</title>
+  <link rel="stylesheet" type="text/css" href="css/form.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div class="form-container"> 
-  <h1>Form 1</h1> 
+  <div class="container">
+    <h1>Form Statistics</h1>
 
-  <h2>Age Statistics</h2>
-  <p>18-25: 30%<div id="bar18-25" class="bar"></div></p>
-  <p>26-35: 40%<div id="bar26-35" class="bar"></div></p>
-  <p>36-45: 20%<div id="bar36-45" class="bar"></div></p>
-  <p>46+: 10%<div id="bar46+" class="bar"></div></p>
+    <?php if (isset($statistics) && is_array($statistics) && !empty($statistics)) : ?>
+    <div class="export-buttons">
+        <a href="export?type=csv&id=<?php echo $form['form_id']; ?>" class="export-button" target="_blank">Export as CSV</a>
+        <a href="export?type=json&id=<?php echo $form['form_id']; ?>" class="export-button" target="_blank">Export as JSON</a>
+        <a href="export?type=html&id=<?php echo $form['form_id']; ?>" class="export-button" target="_blank">Export as HTML</a>
+    </div>
 
+      <div class="statistics-section">
+        <h2>Emotion Distribution</h2>
+        <canvas id="emotionChart"></canvas>
+        <script>
+          var ctx = document.getElementById('emotionChart').getContext('2d');
+          var emotionChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [<?php echo implode(', ', array_map(function($emotion) {
+                return '"' . htmlspecialchars($emotion['emotion_type']) . '"';
+              }, $statistics['emotion_distribution'])); ?>],
+              datasets: [{
+                label: 'Emotion Distribution',
+                data: [<?php echo implode(', ', array_map(function($emotion) {
+                  return htmlspecialchars($emotion['count']);
+                }, $statistics['emotion_distribution'])); ?>],
+                backgroundColor: '#4CAF50'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
+      </div>
 
-  <h2>Domain Statistics</h2>
-  <p>Yes: 60%</p>
-  <div id="barYes" class="bar"></div>
-  <p>No: 40%</p>
-  <div id="barNo" class="bar"></div>
+      <div class="statistics-section">
+        <h2>Age Distribution</h2>
+        <canvas id="ageChart"></canvas>
+        <script>
+          var ctx = document.getElementById('ageChart').getContext('2d');
+          var ageChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [<?php echo implode(', ', array_map(function($age) {
+                return '"Age ' . htmlspecialchars($age['users_age']) . '"';
+              }, $statistics['age_distribution'])); ?>],
+              datasets: [{
+                label: 'Age Distribution',
+                data: [<?php echo implode(', ', array_map(function($age) {
+                  return htmlspecialchars($age['count']);
+                }, $statistics['age_distribution'])); ?>],
+                backgroundColor: '#4CAF50'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
+      </div>
 
-  <h2>Emotion Statistics</h2>
-  <p>Joy: 25%</p>
-  <div id="barJoy" class="bar"></div>
-  <p>Trust: 15%</p>
-  <div id="barTrust" class="bar"></div>
-  <p>Fear: 10%</p>
-  <div id="barFear" class="bar"></div>
-  <p>Sadness: 20%</p>
-  <div id="barSadness" class="bar"></div>
-  <p>Anger: 15%</p>
-  <div id="barAnger" class="bar"></div>
-  <p>Anticipation: 10%</p>
-  <div id="barAnticipation" class="bar"></div>
-  <p>Acceptance: 5%</p>
-  <div id="barAcceptance" class="bar"></div>
-  <p>Disgust: 2%</p>
-  <div id="barDisgust" class="bar"></div>
-</div>
+      <div class="statistics-section">
+        <h2>Gender Distribution</h2>
+        <canvas id="genderChart"></canvas>
+        <script>
+          var ctx = document.getElementById('genderChart').getContext('2d');
+          var genderChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [<?php echo implode(', ', array_map(function($gender) {
+                return '"' . htmlspecialchars($gender['gender']) . '"';
+              }, $statistics['gender_distribution'])); ?>],
+              datasets: [{
+                label: 'Gender Distribution',
+                data: [<?php echo implode(', ', array_map(function($gender) {
+                  return htmlspecialchars($gender['count']);
+                }, $statistics['gender_distribution'])); ?>],
+                backgroundColor: '#4CAF50'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
+      </div>
 
-<script> 
-var domainStats = {yes: 60, no: 40}; 
-var emotionStats = {joy: 25, trust: 15, fear: 10, sadness: 20, anger: 15, anticipation: 10, acceptance: 5, disgust: 2}; 
-var ageStats = {'18-25': 30, '26-35': 40, '36-45': 20, '46+': 10};
-document.getElementById('bar18-25').style.width = ageStats['18-25'] + '%';
-document.getElementById('bar26-35').style.width = ageStats['26-35'] + '%';
-document.getElementById('bar36-45').style.width = ageStats['36-45'] + '%';
-document.getElementById('bar46+').style.width = ageStats['46+'] + '%';
-document.getElementById('barYes').style.width = domainStats.yes + '%'; 
-document.getElementById('barNo').style.width = domainStats.no + '%';
-document.getElementById('barJoy').style.width = emotionStats.joy + '%'; 
-document.getElementById('barTrust').style.width = emotionStats.trust + '%'; 
-document.getElementById('barFear').style.width = emotionStats.fear + '%'; 
-document.getElementById('barSadness').style.width = emotionStats.sadness + '%'; 
-document.getElementById('barAnger').style.width = emotionStats.anger + '%'; 
-document.getElementById('barAnticipation').style.width = emotionStats.anticipation + '%'; 
-document.getElementById('barAcceptance').style.width = emotionStats.acceptance + '%'; 
-document.getElementById('barDisgust').style.width = emotionStats.disgust + '%'; 
-</script>
-</body> 
+      <div class="statistics-section">
+        <h2>Education Level Distribution</h2>
+        <canvas id="educationChart"></canvas>
+        <script>
+          var ctx = document.getElementById('educationChart').getContext('2d');
+          var educationChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [<?php echo implode(', ', array_map(function($education) {
+                return '"' . htmlspecialchars($education['education_level']) . '"';
+              }, $statistics['education_distribution'])); ?>],
+              datasets: [{
+                label: 'Education Level Distribution',
+                data: [<?php echo implode(', ', array_map(function($education) {
+                  return htmlspecialchars($education['count']);
+                }, $statistics['education_distribution'])); ?>],
+                backgroundColor: '#4CAF50'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
+      </div>
+
+      <div class="statistics-section">
+        <h2>Experience Distribution</h2>
+        <canvas id="experienceChart"></canvas>
+        <script>
+          var ctx = document.getElementById('experienceChart').getContext('2d');
+          var experienceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [<?php echo implode(', ', array_map(function($experience) {
+                return '"' . htmlspecialchars($experience['experience']) . '"';
+              }, $statistics['experience_distribution'])); ?>],
+              datasets: [{
+                label: 'Experience Distribution',
+                data: [<?php echo implode(', ', array_map(function($experience) {
+                  return htmlspecialchars($experience['count']);
+                }, $statistics['experience_distribution'])); ?>],
+                backgroundColor: '#4CAF50'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
+      </div>
+
+      <div class="statistics-section">
+        <h2>Average Age</h2>
+        <p>The average age of the users is <?php echo htmlspecialchars($statistics['average_age'] ?? '0'); ?>.</p>
+      </div>
+    <?php endif; ?>
+  </div>
+</body>
 </html>

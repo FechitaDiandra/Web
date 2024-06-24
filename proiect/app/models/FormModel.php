@@ -1,94 +1,141 @@
 <?php
-require_once 'entities/Form.php';
-
 class FormModel {
-    private $conn;
+    private $serviceUrl;
 
     public function __construct() {
-        $this->conn = new mysqli("localhost", "root", "", "foe_app");
-        if ($this->conn->connect_error) {
-            die("Connection failed: " . $this->conn->connect_error);
-        }
+        $this->serviceUrl = 'http://localhost/web/proiect/services/FormService/';
     }
 
-    // Crearea unui formular nou
-    public function createForm($user_id, $title, $description, $is_published, $delete_form_token, $delete_form_token_expires) {
-        $sql = "INSERT INTO forms (user_id, title, description, is_published, delete_form_token, delete_form_token_expires) VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            die("Error preparing statement: " . $this->conn->error);
+    public function createForm($formData) {
+        $curl = curl_init($this->serviceUrl . 'form');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $jsonData = json_encode($formData);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
+
+        $response = curl_exec($curl);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
         }
-        $stmt->bind_param("ississ", $user_id, $title, $description, $is_published, $delete_form_token, $delete_form_token_expires);
-        return $stmt->execute();
+
+        curl_close($curl);
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        return $response;
     }
 
-    // Ștergerea unui formular după ID
-    public function deleteForm($form_id) {
-        $sql = "DELETE FROM forms WHERE form_id = ?";
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            die("Error preparing statement: " . $this->conn->error);
-        }
-        $stmt->bind_param("i", $form_id);
-        return $stmt->execute();
+    public function sendFormLink($email, $formId) {
+        $formLink = "http://" . $_SERVER['SERVER_NAME'] . "/web/proiect/app/answer-form?id=$formId";
+        $to = $email;
+        $subject = "Form Created Successfully!";
+        $message = "Your form has been successfully created! Here is the link you can use to collect responses for your form: $formLink";
+        $headers = "From: contact2feedbackoneverything@gmail.com";
+    
+        return mail($to, $subject, $message, $headers);
     }
 
-    // Obținerea unui formular după ID
-    public function getFormById($form_id) {
-        $stmt = $this->conn->prepare("SELECT * FROM forms WHERE form_id = ?");
-        if ($stmt === false) {
-            die('Error preparing statement: ' . $this->conn->error);
+    public function deleteForm($formId) {
+        $curl = curl_init($this->serviceUrl . 'form/' . $formId);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
         }
-        $stmt->bind_param("i", $form_id);
-        if (!$stmt->execute()) {
-            die('A survenit o eroare la obținerea formularului: ' . $stmt->error);
-        }
-        $result = $stmt->get_result();
-        $form_data = $result->fetch_assoc();
-        $stmt->close();
+        curl_close($curl);
 
-        if ($form_data) {
-            return new Form(
-                $form_data['form_id'],
-                $form_data['user_id'],
-                $form_data['title'],
-                $form_data['description'],
-                $form_data['is_published'],
-                $form_data['created_at'],
-                $form_data['delete_form_token'],
-                $form_data['delete_form_token_expires']
-            );
-        } else {
-            return null;
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
         }
+
+        if ($httpcode === 200) {
+            return $response; //returns the json encoded
+        }
+
+        return json_encode(['success' => false, 'message' => "Deleting the form didn't work as expected."]);
     }
 
-    // Obținerea tuturor formularelor după user_id
-    public function getAllFormsByUserId($user_id) {
-        $stmt = $this->conn->prepare("SELECT * FROM forms WHERE user_id = ?");
-        if ($stmt === false) {
-            die('Error preparing statement: ' . $this->conn->error);
+    public function getFormsByUserId($userId) {
+        $curl = curl_init($this->serviceUrl . 'users-forms/' . $userId);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
         }
-        $stmt->bind_param("i", $user_id);
-        if (!$stmt->execute()) {
-            die('A survenit o eroare la obținerea formularelor: ' . $stmt->error);
+        curl_close($curl);
+
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
         }
-        $result = $stmt->get_result();
-        $forms = [];
-        while ($form_data = $result->fetch_assoc()) {
-            $forms[] = new Form(
-                $form_data['form_id'],
-                $form_data['user_id'],
-                $form_data['title'],
-                $form_data['description'],
-                $form_data['is_published'],
-                $form_data['created_at'],
-                $form_data['delete_form_token'],
-                $form_data['delete_form_token_expires']
-            );
+
+        return $response; //returns the json encoded
+    }
+
+    public function getFormById($formId) {
+        $curl = curl_init($this->serviceUrl . 'form/' . $formId);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
         }
-        $stmt->close();
-        return $forms;
+        curl_close($curl);
+
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        if ($httpcode === 200) {
+            return $response; //returns the json encoded
+        }
+
+        return json_encode(['success' => false, 'message' => "Retrieving the form data from the database didn't work."]);
+    }
+
+    public function getPublicAvailableForms(){
+        $curl = curl_init($this->serviceUrl . 'public-forms');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
+
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        if ($httpcode === 200) {
+            return $response; //returns the json encoded
+        }
+
+        return json_encode(['success' => false, 'message' => "Retrieving the public forms from the database didn't work."]);
+    }
+
+    public function reportForm($formId){
+        $curl = curl_init($this->serviceUrl . 'report-form/' . $formId);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+        curl_close($curl);
+        if (isset($error_msg)) {
+            return json_encode(['success' => false, 'message' => $error_msg]);
+        }
+
+        if ($httpcode === 200) {
+            return $response; //returns the json encoded
+        }
+
+        return json_encode(['success' => false, 'message' => "Reporting the form didn't work as expected."]);
     }
 }
 ?>

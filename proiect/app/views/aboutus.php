@@ -5,33 +5,23 @@
 <head>
   <title>Feedback On Everything</title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/aboutus.css">
+  <link rel="stylesheet" type="text/css" href="css/form.css">
 </head>
 <body>
-  <div class="container" id ="about-us">
+<div class="aboutus-container" id ="about-us">
     <h1>Web Tool for Anonymous Feedback</h1>
-    <p>Welcome to our web tool for anonymous feedback! Here you can provide feedback on various aspects such as events, people, geographical locations, products, services, artistic artifacts, and much more. The feedback you provide will be expressed through a range of emotions according to the Plutchik model.</p>
-    <p>The process is simple:</p>
+    <p>Welcome to our feedback collection website! Our platform allows you to create custom feedback forms to gather insights from users on a variety of topics. Whether you're seeking opinions on events, products, services, or any other subject, our tool makes it easy to collect feedback anonymously.</p>
+    <p><strong>Here’s what you can do:</strong></p>
     <ol>
-        <li><strong>Select the thing you want to give feedback on</strong>: You can choose from our diverse list of things we want feedback on.</li>
-        <li><strong>Create your own feedback form</strong>: You can make your form, setting the time to be available and then you cand share it with others.</li>
-        <li><strong>Provide the feedback</strong>: Express your emotion towards the selected thing by choosing one of the feedback options based on the Plutchik model.</li>
-        <li><strong>Ensure your feedback is anonymous</strong>: You don't need to worry about disclosing your identity. The feedback is completely anonymous.</li>
-        <li><strong>Manage your responses</strong>: After providing feedback, you can come back and edit it if necessary. We're here to ensure you accurately express how you feel.</li>
+        <li><strong>Create feedback forms:</strong> Design personalized forms tailored to your needs and set them up for collecting responses.</li>
+        <li><strong>Share the form with others:</strong> You can publish your form on our website to gather responses from a variety of users, or keep the link private if you need to target specific groups for feedback.</li>
+        <li><strong>Gather feedback:</strong> Users can anonymously provide feedback using feedback options based on the Plutchik model.</li>
+        <li><strong>Answer public forms: </strong> As a user, you can also participate in public forms shared by others, contributing your insights anonymously.</li>
+        <li><strong>Generate reports and statistics:</strong> Once the feedback collection period ends, we generate detailed reports. These reports provide insights into sentiments expressed regarding the chosen topic.
+        Explore relevant statistics based on each recorded emotion, user groups, evaluation periods, subcategories, and positive/negative features.</li>
     </ol>
-    <p>After the feedback collection period for a particular thing ends, we will generate detailed reports to give you a complete picture of the sentiments expressed regarding that thing. These reports will include relevant statistics for each category of things evaluated according to each recorded emotion. We will also consider multiple criteria such as user group, evaluation period, thing subcategories, and positive/negative features based on the expressed emotion.</p>
-    <p>The generated reports will be available in HTML, CSV, and JSON formats to provide you with flexibility in analysis and usage.</p>
+    <p>Our platform ensures anonymity throughout the feedback process, and the generated reports provide a comprehensive overview of the sentiments expressed. Reports are available in multiple formats (HTML, CSV, JSON) for your convenience in analysis and presentation.</p>
     <p>Thank you for choosing to use our web tool for anonymous feedback. We aim to provide you with the best experience and ensure that your voice matters!</p>
   </div>
-
-<?php
-  echo '<pre>';
-  print_r($_SESSION);
-  echo '</pre>';
-  echo '<pre>';
-  var_dump($_SESSION);
-  echo '</pre>';
-  echo session_id();
-?>
 </body>
 </html>
