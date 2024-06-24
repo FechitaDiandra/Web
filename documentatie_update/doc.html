@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      padding: 0;
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    ul {
+      margin-bottom: 20px;
+    }
+    ul li {
+      margin-bottom: 10px;
+    }
+    img {
+      max-width: 80%;
+      height: auto;
+      margin-bottom: 20px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <title>Project Specification</title>
+</head>
+<body>
+  <h1>1. Introduction</h1>
+  <h2>Product Scope</h2>
+  <p>The project aims to develop a web application that allows users to create custom forms for statistics and analysis. These forms can be tailored to specific entities or categories, enabling users to gather feedback and generate insights for their own purposes. The forms will capture feedback responses using the Plutchik emotion model.</p>
+  <p>In addition to creating forms, the web application will provide users with the ability to provide anonymous feedback for different entities (events, people, locations, products, services, etc.) using the Plutchik emotion model. Users will utilize intuitive forms to submit their emotional responses, which will be recorded and stored using a REST/GraphQL API.</p>
+
+  <h2>References</h2>
+  <ul>
+    <li><a href="https://www.6seconds.org/2022/03/13/plutchik-wheel-emotions/">Plutchik Model</a></li>
+  </ul>
+
+  <h1>2. Overall Description</h1>
+  <h2>Product Functions</h2>
+  <ul>
+    <li>Allow users to create custom forms for collecting feedback based on the Plutchik emotion model.</li>
+    <li>Enable users to submit anonymous feedback for various entities.</li>
+    <li>Provide statistical analysis and visualization of collected feedback.</li>
+    <li>Support user registration and authentication for managing forms and viewing historical data.</li>
+    <li>Administrate user roles and manage reported forms for ensuring platform integrity.</li>
+  </ul>
+
+  <h2>User Classes and Characteristics</h2>
+  <ul>
+    <li>General users: Can provide anonymous feedback using created forms.</li>
+    <li>Logged-in users: Can create, manage, and view statistics of their own forms.</li>
+    <li>Administrators: Have full control over user management, form moderation, and platform settings.</li>
+  </ul>
+
+  <h2>Operating Environment</h2>
+  <ul>
+    <li>Compatible with modern web browsers (Chrome, Firefox, Safari, Edge).</li>
+    <li>Supports multiple operating systems (Windows, macOS, Linux).</li>
+  </ul>
+
+  <h2>Design and Implementation Constraints</h2>
+  <ul>
+    <li>Utilizes REST/GraphQL API architecture for backend operations.</li>
+    <li>Requires UTF-8 encoding for consistent data handling across platforms.</li>
+  </ul>
+
+  <h2>Assumptions and Dependencies</h2>
+  <ul>
+    <li>Users have access to a stable internet connection for form creation and feedback submission.</li>
+    <li>Users are familiar with the Plutchik emotion model for providing feedback.</li>
+  </ul>
+
+  <h1>3. External Interface Requirements</h1>
+  <h2>User Interfaces</h2>
+  
+  <p>1. Header: Different headers for logged-in, non-logged-in users and admin interface.</p>
+  <img src="views/loggedin_header.png" alt="Header for logged users">
+  <img src="views/not_loggedin_header.png" alt="Header for non-logged users">
+  <img src="views/admin_header.png" alt="Header for admin">
+
+  <br><br>
+  <p>2. HomePage: Displays website functionality and latest published forms.</p>
+  <img src="views/homepage.png" alt="HomePage">
+
+  <br><br>
+  <p>3. Create Form page: Allows logged-in users to create custom feedback forms.</p>
+  <img src="views/create_form.png" alt="Create Form page">
+
+  <br><br>
+  <p>4. Answer Form page: Allows users to provide feedback anonymously.</p>
+  <img src="views/answer_form1.png" alt="Answer Form page">
+  <img src="views/answer_form2.png" alt="Answer Form page">
+  <img src="views/answer_form3.png" alt="Answer Form page">
+
+  <br><br>
+  <p>5. View Form page: Allows users to view the details of the form and the answers, if it's accesed by the creator of the form or by admin.</p>
+  <img src="views/view_form.png" alt="view Form page">
+
+  <br><br>
+  <p>6. My Account page: Displays user profile and account management options.</p>
+  <img src="views/my_account.png" alt="My Account page">
+
+  <br><br>
+  <p>7. Forms History page: Shows user's form history with options to view statistics, view form and delete form.</p>
+  <img src="views/forms_history.png" alt="Forms History page">
+
+  <br><br>
+  <p>8. View Statistics page: Displays visual representation of feedback statistics with the possibility of downloading them in different formats, along with the individual answers.</p>
+  <img src="views/view_statistics.png" alt="View Statistics page">
+
+
+  <h2>Admin Interface</h2>
+  <p>The administrator interface provides additional functionality for managing users and reported forms:</p>
+  <ul>
+    <li>View user's profile with the option to delete their accounts.</li>
+    <li>View and manage reported forms, with options to delete or cancel reports.</li>
+    <li>Access detailed statistics and analytics for all forms.</li>
+    <li>Answer to the messages the users have sent in the Contact Form Page.</li>
+  </ul>
+
+  <br><br>
+  <p>9. Administrators page: Allows the administrator to manage users, forms, reported forms and make import and exports for database backup.</p>
+  <img src="views/admin.png" alt="Administrators page">
+  <img src="views/admin2.png" alt="Administrators page">
+
+  <br><br>
+  <p>10. Administrators page: Allows the administrator to respond to the users messages received from the contact form.</p>
+  <img src="views/admin_inbox.png" alt="Administrators Inbox">
+
+  <h1>4. System Features</h1>
+  <h2>User Authentication and Authorization:</h2> 
+  <p>Implementing a secure login system that includes password encryption and session management. This could also include features like password recovery by email verification.</p>
+
+  <h2>Data Export</h2>
+  <p>Users can export the data from their feedback forms in various formats (CSV, JSON, HTML) for further analysis.</p>
+
+  <h2>Anonymous Feedback Submission</h2>
+  <p>Users can provide feedback anonymously without requiring them to create an account or provide personal information. This can encourage more honest and unbiased feedback.</p>
+
+  <h2>Emotion Selection</h2>
+  <p>User-friendly interface for selecting emotions based on the Plutchik model. </p>
+
+  <h2>Data Visualization</h2>
+  <p>Implementing visually appealing data visualizations to represent feedback data, such as charts, using Chart.js. This can help users understand the data more intuitively and identify patterns or trends.</p>
+
+  <h2>Social Sharing</h2>
+  <p>Implementing social media sharing functionality to allow users to share feedback forms or specific responses on platforms like Facebook, Instagram, LinkedIn.</p>
+
+  <h2>Email Messaging (SMTP with Gmail)</h2>
+  <p>Integration with Gmail SMTP for email notifications and communication:</p>
+  <ul>
+    <li>Send confirmation emails after registration..</li>
+    <li>Send password reset, email change, delete account confirmations emails.</li>
+    <li>Send notifications to users when a form is successfully created.</li>
+    <li>Send messages to the admin using the form from the Contact Page.</li>
+  </ul>
+
+  <h2>Databases</h2>
+  <p>The database will contain tables for forms, responses, and users. Each table will have a unique randomly generated ID for each record.</p>
+  <ul>
+    <li>Forms Table: Stores form metadata and structure.</li>
+    <li>Responses Table: Stores feedback responses and associated metadata.</li>
+    <li>Users Table: Stores user information and authentication credentials.</li>
+  </ul>
+  <img src="databases_web.png" alt="Database Schema">
+
+  <h1>5. Other Nonfunctional Requirements</h1>
+  <h2>Safety Requirements</h2>
+  <ul>
+    <li>User anonymity must be maintained.</li>
+    <li>Data encryption for user privacy.</li>
+  </ul>
+
+  <h2>Security Requirements</h2>
+  <ul>
+    <li>Secure user authentication and authorization.</li>
+  </ul>
+
+
+  <section>
+    <h1>6. Architecture</h1>
+
+    <article>
+      <h2>6.1 MVC (Model-View-Controller) Architecture</h2>
+
+      <p>The project follows the MVC architectural pattern to ensure separation of concerns and maintainability of the codebase. MVC divides an application into three interconnected components:</p>
+
+      <ol>
+        <li>
+          <strong>Model:</strong>
+          <ul>
+            <li>Represents the application's data and business logic.</li>
+            <li>Interacts with the database, sends requests to the services and encapsulates data manipulation and validation.</li>
+            <li>Example: The <code>User</code>, <code>Form</code>, and <code>Answer</code> models manage respective entities and their relationships.</li>
+            </ul>
+        </li>
+        <li>
+          <strong>View:</strong>
+          <ul>
+            <li>Presents the user interface and renders data from the model into a suitable format.</li>
+            <li>Receives user input and sends it to the controller for processing.</li>
+            <li>Example: HTML templates render forms, feedback responses, and statistical data.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Controller:</strong>
+          <ul>
+            <li>Acts as an intermediary between the model and view.</li>
+            <li>Processes user requests, retrieves data from the model, and selects views to display the response.</li>
+            <li>Example: PHP controllers handle HTTP requests, invoke appropriate models for data operations, and manage user authentication.</li>
+          </ul>
+        </li>
+      </ol>
+    </article>
+
+    <article>
+      <h2>6.2 Services</h2>
+
+      <p>Services in the project encapsulate reusable business logic and external integrations, promoting code reusability and separation of concerns.</p>
+
+      <ol>
+        <li>
+          <strong>User Service:</strong>
+          <ul>
+            <li>Manages user-related operations such as authentication, registration, and profile management.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Form Service:</strong>
+          <ul>
+            <li>Handles operations related to form creation, publication, and feedback collection.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Answer Service:</strong>
+          <ul>
+            <li>Handles operations related to answers, such as creation, retrieving and generating statistics..</li>
+          </ul>
+        </li>
+      </ol>
+    </article>
+  </section>
+
+</body>
+</html>
